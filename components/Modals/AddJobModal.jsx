@@ -98,7 +98,7 @@ function AddJobModal({
       await axios({
         method: "put",
         data: companyDetails,
-        withCredentials: true,
+        // withCredentials: true,
         url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${companyDetails._id}`,
       });
 
@@ -114,7 +114,7 @@ function AddJobModal({
     await axios({
       method: "put",
       data: companyDetails,
-      withCredentials: true,
+      // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${companyDetails._id}`,
     });
 

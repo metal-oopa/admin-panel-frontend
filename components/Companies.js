@@ -10,7 +10,7 @@ function Companies() {
   useEffect(() => {
     axios({
       method: "get",
-      withCredentials: true,
+      // withCredentials: true,
       url: "https://admin-panel-backend.vercel.app/get-ideas-for-students",
     }).then((data) => {
       setCompanyList(data.data);

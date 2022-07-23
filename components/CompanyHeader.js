@@ -14,7 +14,7 @@ function CompanyHeader({ id, companyDetails }) {
   //   if (id) {
   //     await axios({
   //       method: "get",
-  //       withCredentials: true,
+  //       // withCredentials: true,
   //       url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
   //     }).then((data) => {
   //       setCompanyDetails(data.data);
@@ -60,7 +60,7 @@ function CompanyHeader({ id, companyDetails }) {
         numberOfOpenings: companyDetails.numberOfOpenings,
         image: companyDetails.image,
       },
-      withCredentials: true,
+      // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${id}`,
     });
 

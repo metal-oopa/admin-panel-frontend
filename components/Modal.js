@@ -36,7 +36,7 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
         facebook: "",
         instagram: "",
       },
-      withCredentials: true,
+      // withCredentials: true,
       url: "https://admin-panel-backend.vercel.app/create-idea-for-students",
     });
 

@@ -25,7 +25,7 @@ function TeamSize({ setTeamSize, id, companyDetails }) {
   // useEffect(async () => {
   //   await axios({
   //     method: "get",
-  //     withCredentials: true,
+  //     // withCredentials: true,
   //     url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
   //   }).then((data) => {
   //     if (data.data.teamSize.length > 0) {

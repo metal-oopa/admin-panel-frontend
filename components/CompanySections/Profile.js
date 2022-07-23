@@ -24,7 +24,7 @@ function Profile({ id, companyDetails }) {
   //   if (id) {
   //     await axios({
   //       method: "get",
-  //       withCredentials: true,
+  //       // withCredentials: true,
   //       url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
   //     }).then((data) => {
   //       console.log(data.data);
@@ -106,7 +106,7 @@ function Profile({ id, companyDetails }) {
         keyPeople: companyDetails.keyPeople,
         image: companyDetails.image,
       },
-      withCredentials: true,
+      // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${id}`,
     });
 

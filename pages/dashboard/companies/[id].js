@@ -20,7 +20,7 @@ function Company() {
       // console.log(id);
       await axios({
         method: "get",
-        withCredentials: true,
+        // withCredentials: true,
         url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
       }).then((data) => {
         // console.log(data.data);
