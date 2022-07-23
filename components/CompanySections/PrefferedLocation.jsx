@@ -1,7 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-function PrefferedLocation({ setLocation }) {
+function PrefferedLocation({ setLocation, id, companyDetails }) {
   const [showlocation, setshowlocation] = useState(false);
   const [preferredLocation, setPreferredLocation] = useState([
     { name: 'Totally Open', selected: false },
@@ -30,26 +31,43 @@ function PrefferedLocation({ setLocation }) {
   });
   const [inputValue, setInputValue] = useState('');
 
+  // * Get user preferred location
+  // useEffect(async () => {
+  //   await axios({
+  //     method: "get",
+  //     withCredentials: true,
+  //     url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
+  //   }).then((data) => {
+  //     if (data.data.locations.length > 0) {
+  //       setPreferredLocation(data.data.locations);
+  //     }
+  //   });
+  // }, [])
+
+  useEffect(() => {
+    if (companyDetails && companyDetails.locations.length > 0) {
+      setPreferredLocation(companyDetails.locations);
+    }
+  }, [companyDetails])
+
   const updatePreferredLocation = (roleName) => {
 
-      let flag = 1 ;
-      for(let i=0 ; i<preferredLocation.length ; i++)
-      {
-        const x = preferredLocation[i];
-        if(x.name == roleName)
-        {
-          flag = 0;
-          break;
-        }
+    let flag = 1;
+    for (let i = 0; i < preferredLocation.length; i++) {
+      const x = preferredLocation[i];
+      if (x.name == roleName) {
+        flag = 0;
+        break;
       }
-      if(flag) preferredLocation.unshift({name : roleName , selected : false})  
-    
+    }
+    if (flag) preferredLocation.unshift({ name: roleName, selected: false })
+
     const newData = preferredLocation.map((role) => {
       if (role.name === roleName)
         if (!role.selected && totalPreferredLocation === 7);
         else role.selected = !role.selected;
 
-      return role;  
+      return role;
     })
     setPreferredLocation(newData);
     setLocation(newData)
@@ -89,7 +107,7 @@ function PrefferedLocation({ setLocation }) {
   };
   useEffect(() => {
     const body = document.getElementsByTagName('body');
-    if ( showlocation) {
+    if (showlocation) {
       body[0].style.overflow = 'hidden';
       body[0].style.position = 'fixed';
       body[0].style.width = '100%';
@@ -97,73 +115,72 @@ function PrefferedLocation({ setLocation }) {
       body[0].style.overflow = 'auto';
       body[0].style.position = 'relative';
     }
-  }, [ showlocation]);
+  }, [showlocation]);
 
   return (
     <>
-        
-          <div >
-                <div className="p-0 max-w-full">
-                  {/* CONTENT START */}
-                    
-                  <div className="w-[100%] m-auto">
-                    <div className="text-left ">
-                      <h5 className="text-[12px] font-semibold text-[#201e27]">
-                        Location
-                      </h5>
-                      
-                    </div>
-                    <div className="relative flex-auto">
-                      <input
-                        className="appearance-none px-3 py-2 mt-[7px] mb-[7px] placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in bg-transparent"
-                   
-                        type="text"
-                        value={inputValue}
-                        onChange={handleInputValueChange}
-                        placeholder="Example: Boston, Houston"
-                        
-                      />
-                      <div
-                        className={`${
-                          autocomplete.disabled ? 'hidden' : ''
-                        } absolute z-10 border rounded-md border-gray-300 py-1 bg-white ml-2 max-h-60 overflow-y-scroll`}
-                        style={{ width: 'calc(100% + 20px)' }}
-                      >
-                        {autocomplete.data.map((item, index) => (
-                          <div
-                            key={index}
-                            className="px-3 h-[2rem] flex items-center cursor-pointer 
+
+      <div >
+        <div className="p-0 max-w-full">
+          {/* CONTENT START */}
+
+          <div className="w-[100%] m-auto">
+            <div className="text-left ">
+              <h5 className="text-[12px] font-semibold text-[#201e27]">
+                Location
+              </h5>
+
+            </div>
+            <div className="relative flex-auto">
+              <input
+                className="appearance-none px-3 py-2 mt-[7px] mb-[7px] placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in bg-transparent"
+
+                type="text"
+                value={inputValue}
+                onChange={handleInputValueChange}
+                placeholder="Example: Boston, Houston"
+
+              />
+              <div
+                className={`${autocomplete.disabled ? 'hidden' : ''
+                  } absolute z-10 border rounded-md border-gray-300 py-1 bg-white ml-2 max-h-60 overflow-y-scroll`}
+                style={{ width: 'calc(100% + 20px)' }}
+              >
+                {autocomplete.data.map((item, index) => (
+                  <div
+                    key={index}
+                    className="px-3 h-[2rem] flex items-center cursor-pointer 
                             font-medium text-sm hover:bg-gray-100"
-                            onClick={() => updatePreferredLocation(item)}
-                          >
-                            {item}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="ml-1">
-                      {preferredLocation.map((role, index) => {
-                      if(role.name ) return(
-                        <span
-                          key={index}
-                          className="inline-block border border-gray-300
-                          rounded-full mr-2 mb-3 py-3 px-4 text-sm cursor-pointer text-gray-500 select-none"
-                          style={{
-                            background: role.selected ? '#61a0ff' : '',
-                            color: role.selected ? '#fff' : '',
-                          }}
-                          onClick={() => updatePreferredLocation(role.name)}
-                        >
-                          {role.name}
-                        </span>
-                      )
-                        } )  }
-                    </div>
+                    onClick={() => updatePreferredLocation(item)}
+                  >
+                    {item}
                   </div>
-                </div>
-                {/* CONTENT END */}
+                ))}
               </div>
-          
+            </div>
+            <div className="ml-1">
+              {preferredLocation.map((role, index) => {
+                if (role.name) return (
+                  <span
+                    key={index}
+                    className="inline-block border border-gray-300
+                          rounded-full mr-2 mb-3 py-3 px-4 text-sm cursor-pointer text-gray-500 select-none"
+                    style={{
+                      background: role.selected ? '#61a0ff' : '',
+                      color: role.selected ? '#fff' : '',
+                    }}
+                    onClick={() => updatePreferredLocation(role.name)}
+                  >
+                    {role.name}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        </div>
+        {/* CONTENT END */}
+      </div>
+
     </>
   );
 }

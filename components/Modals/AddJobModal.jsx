@@ -1,6 +1,7 @@
 import { Editor } from 'draft-js';
-import React, {  useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import RichEditor from '../General/Editor';
+import axios from 'axios';
 
 function AddJobModal({
   showAddJobModal,
@@ -8,116 +9,151 @@ function AddJobModal({
   jobs,
   curItem,
   isEdit,
-  index
+  index,
+  companyDetails,
 }) {
-    const [jobTitle , setJobTitle] = useState('')
-    const [jobType, setjobType] = useState(
-      [ 
-        { name: 'Fulltime', selected: false},
-        { name: 'Internship', selected: false}
-      ]
-    );
+  const [jobTitle, setJobTitle] = useState('')
+  const [jobType, setjobType] = useState(
+    [
+      { name: 'Fulltime', selected: false },
+      { name: 'Internship', selected: false }
+    ]
+  );
+  // console.log(curItem)
 
-    const [ jobname ,setJobName ]= useState('');
+  const [jobname, setJobName] = useState('');
 
 
-    const [autocomplete, setAutocomplete] = useState({
+  const [autocomplete, setAutocomplete] = useState({
+    disabled: true,
+    data: [],
+  });
+
+  const [description, setDescription] = useState("");
+  const handleDescriptionChange = (htmlContent) => {
+    setDescription(htmlContent);
+  };
+  const [responsibilities, setResponsibilities] = useState("");
+  const handleResponsibilityChange = (htmlContent) => {
+    setResponsibilities(htmlContent);
+  };
+
+
+  const [inputValue, setInputValue] = useState('');
+
+
+  const handleInputValueChange = (e) => {
+    setInputValue(e.target.value);
+    if (e.target.value.trim() === '')
+      setAutocomplete({ disabled: true, data: [] });
+    else {
+      const autocompleteData = [];
+      const regex = new RegExp(e.target.value, 'i');
+
+      jobType.forEach((role) => {
+        if (regex.test(role.name)) autocompleteData.push(role.name);
+      });
+
+      setAutocomplete({
+        disabled: false,
+        data: [e.target.value, ...autocompleteData],
+      });
+    }
+  };
+
+  const updatejobType = (roleName) => {
+
+    const newData = jobType.map((role) => {
+      if (role.name === roleName)
+        role.selected = !role.selected;
+      if (role.selected === true) setJobName(role.name)
+
+      return role;
+    });
+    setInputValue('');
+    setAutocomplete({
       disabled: true,
       data: [],
     });
 
-      const [description, setDescription] = useState("");
-      const handleDescriptionChange = (htmlContent) => {
-          setDescription(htmlContent);
-      };
-      const [responsibilities, setResponsibilities] = useState("");
-      const handleResponsibilityChange = (htmlContent) => {
-        setResponsibilities(htmlContent);
-      };
-
-    
-      const [inputValue, setInputValue] = useState('');
-
-      const handleInputValueChange = (e) => {
-      setInputValue(e.target.value);
-      if (e.target.value.trim() === '')
-        setAutocomplete({ disabled: true, data: [] });
-      else {
-        const autocompleteData = [];
-        const regex = new RegExp(e.target.value, 'i');
-  
-        jobType.forEach((role) => {
-          if (regex.test(role.name)) autocompleteData.push(role.name);
-        });
-  
-        setAutocomplete({
-          disabled: false,
-          data: [e.target.value, ...autocompleteData],
-        });
-      }
-    };
-
-      const updatejobType = (roleName) => {
-       
-        const newData = jobType.map((role) => {
-            if (role.name === roleName)
-                role.selected = !role.selected;
-            if(role.selected === true) setJobName(role.name)
-      
-            return role;
-          });
-          setInputValue('');
-          setAutocomplete({
-            disabled: true,
-            data: [],
-          });
-
-          setjobType(newData);
+    setjobType(newData);
 
 
-      };
+  };
 
-      const handleSaveJobClick = () => {
-        console.log(jobTitle)
-        console.log(jobname);
-        var newData = jobType ;
-        
-        const newJob = {title : jobTitle , jobType : jobname ,  description : description , responsibilities : responsibilities};
-        setShowAddJobModal(0);
-
-        console.log(newJob)
-
-        if(isEdit)
-        {
-          if(newJob.title !== '')jobs[index].title = newJob.title;
-          if(newJob.jobType !== '')jobs[index].jobType = newJob.jobType;
-          if(newJob.description !== '')jobs[index].description = newJob.description;
-          if(newJob.responsibilities !== '')jobs[index].responsibilities = newJob.responsibilities;
+  const handleSaveJobClick = async () => {
+    if (curItem._id) {
+      // update job
+      companyDetails.jobs.map((job, index) => {
+        if (job._id === curItem._id) {
+          job.title = jobTitle === '' ? curItem.title : jobTitle;
+          job.jobType = jobname === '' ? curItem.jobType : jobname;
+          job.description = description;
+          job.responsibilities = responsibilities;
         }
-        else{          
-          var type ;
+        return job;
+      })
 
-          jobType.map((job)=>{
-            if(job.selected === true)type = job.name ;
-          })
+      // add axios call to update company details
+      await axios({
+        method: "put",
+        data: companyDetails,
+        withCredentials: true,
+        url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${companyDetails._id}`,
+      });
 
-          jobs.unshift(newJob)
+      setShowAddJobModal(0);
 
-        }
-     
-        setShowAddJobModal(0);
-        setJobTitle('');
+      return;
+    }
+    // add job
+    const newJob = { title: jobTitle, jobType: jobname, description: description, responsibilities: responsibilities };
+    companyDetails.jobs.push(newJob);
+    console.log(companyDetails)
+    // add axios call to update company details
+    await axios({
+      method: "put",
+      data: companyDetails,
+      withCredentials: true,
+      url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${companyDetails._id}`,
+    });
 
-        jobType.map((role) => {
-          role.selected = false;
-          return role;
-        })
-   
-        setDescription('');
-        setResponsibilities('');
+    // var newData = jobType;
 
-      }
-  
+    setShowAddJobModal(0);
+
+    // // console.log(newJob)
+
+    // if (isEdit) {
+    //   if (newJob.title !== '') jobs[index].title = newJob.title;
+    //   if (newJob.jobType !== '') jobs[index].jobType = newJob.jobType;
+    //   if (newJob.description !== '') jobs[index].description = newJob.description;
+    //   if (newJob.responsibilities !== '') jobs[index].responsibilities = newJob.responsibilities;
+    // }
+    // else {
+    //   var type;
+
+    //   jobType.map((job) => {
+    //     if (job.selected === true) type = job.name;
+    //   })
+
+    //   jobs.unshift(newJob)
+
+    // }
+
+    // setShowAddJobModal(0);
+    // setJobTitle('');
+
+    // jobType.map((role) => {
+    //   role.selected = false;
+    //   return role;
+    // })
+
+    // setDescription('');
+    // setResponsibilities('');
+
+  }
+
   return (
     <div>
       {showAddJobModal ? (
@@ -146,53 +182,53 @@ function AddJobModal({
 
               <div className="px-10 w-full  mt-[10px]">
                 <div className="w-full mt-[15px]">
-                    <p className="text-[15px] font-semibold text-[#201e27]">
-                        Job Title
-                    </p>  
-                    <input
-                        type="text"
-                        defaultValue = {curItem.title}
-                        onChange={(e) => setJobTitle(e.target.value)}
-                        placeholder="Job Title"
-                        className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
-                    />
+                  <p className="text-[15px] font-semibold text-[#201e27]">
+                    Job Title
+                  </p>
+                  <input
+                    type="text"
+                    defaultValue={curItem.title}
+                    onChange={(e) => setJobTitle(e.target.value)}
+                    placeholder="Job Title"
+                    className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
+                  />
                 </div>
                 <div className="w-full mt-[25px]">
-                    <p className="text-[15px] font-semibold text-[#201e27]">
-                        Type
-                    </p>
-                    <input
-                        type="text"
-                        defaultValue={curItem.jobType}
-                        // value={inputValue}
-                        onChange={handleInputValueChange}
-                        placeholder="Fulltime , Internship"
-                        className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
-                    />
+                  <p className="text-[15px] font-semibold text-[#201e27]">
+                    Type
+                  </p>
+                  <input
+                    type="text"
+                    defaultValue={curItem.jobType}
+                    // value={inputValue}
+                    onChange={handleInputValueChange}
+                    placeholder="Fulltime , Internship"
+                    className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
+                  />
 
-                      <div
-                        className={`${
-                          autocomplete.disabled ? 'hidden' : ''
-                        } ml-[0.5rem] w-[90%] absolute z-10 border rounded-md  py-1 bg-white
+                  <div
+                    className={`${autocomplete.disabled ? 'hidden' : ''
+                      } ml-[0.5rem] w-[90%] absolute z-10 border rounded-md  py-1 bg-white
                         max-h-60 overflow-y-scroll`}
-                      >
-                        {autocomplete.data.map((item, index) => {
-                         
-                          return (
-                          <div
-                            key={index}
-                            className="px-3  h-[2rem] flex items-center cursor-pointer 
+                  >
+                    {autocomplete.data.map((item, index) => {
+
+                      return (
+                        <div
+                          key={index}
+                          className="px-3  h-[2rem] flex items-center cursor-pointer 
                             font-medium text-sm hover:bg-gray-100"
-                            onClick={() => updatejobType(item)}
-                          >
-                            {item}
-                          </div>
-                        )})}
-                      </div>
-                    
-                    <div className="w-full ml-[-10px]">
-                      {jobType.map((role, index) => {
-                        return (
+                          onClick={() => updatejobType(item)}
+                        >
+                          {item}
+                        </div>
+                      )
+                    })}
+                  </div>
+
+                  <div className="w-full ml-[-10px]">
+                    {jobType.map((role, index) => {
+                      return (
                         <span
                           key={index}
                           className="preferred_roles"
@@ -204,31 +240,36 @@ function AddJobModal({
                         >
                           {role.name}
                         </span>
-                      )})}
-                    </div>
+                      )
+                    })}
+                  </div>
                 </div>
 
                 <div className='mt-[25px]'>
                   <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">Description</p>
                   <RichEditor
-                      htmlContent={curItem.description}
-                      handleEditorChange={handleDescriptionChange}
+                    htmlContent={curItem.description}
+                    handleEditorChange={handleDescriptionChange}
+                    curItem={curItem}
+                    purpose="jobDescription"
                   />
                 </div>
                 <div className='mt-[25px]'>
                   <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">Responsibilities</p>
                   <RichEditor
-                      htmlContent={curItem.responsibilities}
-                      handleEditorChange={handleResponsibilityChange}
+                    htmlContent={curItem.responsibilities}
+                    handleEditorChange={handleResponsibilityChange}
+                    curItem={curItem}
+                    purpose='jobResponsibilities'
                   />
                 </div>
-            </div>
-            <hr/>
+              </div>
+              <hr />
               <button className="save-button float-right m-[20px] py-[10px] " onClick={handleSaveJobClick}>
-                  Save
-              </button> 
+                Save
+              </button>
             </div>
-            
+
           </div>
         </>
       ) : null}
