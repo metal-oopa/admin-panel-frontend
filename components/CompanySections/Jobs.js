@@ -26,6 +26,7 @@ function Jobs({ id, companyDetails }) {
     setIsEdit(true);
     setIndex(index);
     setShowAddJobModal(true);
+    setIsEdit(true);
   };
 
   const handleSaveJobClick = () => {
@@ -52,6 +53,7 @@ function Jobs({ id, companyDetails }) {
         showAddJobModal={showAddJobModal}
         setShowAddJobModal={setShowAddJobModal}
         jobs={jobs}
+        setJobs={setJobs}
         curItem={curItem}
         isEdit={isEdit}
         index={index}

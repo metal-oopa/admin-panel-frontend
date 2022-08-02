@@ -14,8 +14,8 @@ import { stateToHTML } from 'draft-js-export-html';
 const RichEditor = ({
   htmlContent,
   handleEditorChange,
-  lenExceeded,
-  setLenExceeded,
+  // lenExceeded = false,
+  // setLenExceeded,
   id,
   companyDetails,
   curItem,
@@ -26,6 +26,7 @@ const RichEditor = ({
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
+  const [lenExceeded, setLenExceeded] = useState(false);
 
   useEffect(() => {
     // console.log("hi");
@@ -63,6 +64,7 @@ const RichEditor = ({
     setEditorState(editorchange);
     setContentLength(editorState.length);
   };
+
   const _onBoldClick = () => {
     onEditorChange(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
   };
@@ -91,7 +93,16 @@ const RichEditor = ({
     return 'not-handled';
   };
 
-  const handlePastedText = (_text, html, editorState) => { };
+  const handlePastedText = (_text, html, editorState) => {
+  };
+
+  const onContentChange = (editorState) => {
+    const contentState = editorState.getCurrentContent();
+    const newState = EditorState.createWithContent(contentState);
+    if (contentState.getPlainText().length > 500) {
+      setLenExceeded(true);
+    }
+  }
 
   return (
     <div>
@@ -99,7 +110,7 @@ const RichEditor = ({
         <div style={{ borderBottom: "1px solid grey" }} className='h-[10rem] p-[5px]'>
           <Editor
             editorState={editorState}
-            onChange={setEditorState}
+            onChange={(editorState) => onEditorChange(editorState)}
             handleKeyCommand={handleKeyCommand}
             handlePastedText={handlePastedText}
             placeholder="Give a brief description"

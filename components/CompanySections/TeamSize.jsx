@@ -26,7 +26,7 @@ function TeamSize({ setTeamSize, id, companyDetails }) {
   //   await axios({
   //     method: "get",
   //     // withCredentials: true,
-  //     url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
+  //     url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
   //   }).then((data) => {
   //     if (data.data.teamSize.length > 0) {
   //       setPreferredSkills(data.data.teamSize);
@@ -35,8 +35,11 @@ function TeamSize({ setTeamSize, id, companyDetails }) {
   // }, [])
 
   useEffect(() => {
-    if (companyDetails && companyDetails.teamSize.length > 0) {
-      setPreferredSkills(companyDetails.teamSize);
+    if (companyDetails) {
+      const teamSize = companyDetails.teamSize || [];
+      if (teamSize.length > 0) {
+        setPreferredSkills(companyDetails.teamSize);
+      }
     }
   }, [companyDetails])
 
@@ -75,16 +78,16 @@ function TeamSize({ setTeamSize, id, companyDetails }) {
     });
   };
 
-  useEffect(() => {
-    // skills.forEach((name) => updatePreferredSkills(name));
-    // setUserPrefferedSkills(
-    //   skills.map((name) => ({
-    //     name,
-    //     selected: true,
-    //   }))
-    // );
-    // setTotalPreferredSkills(skills.length);
-  }, []);
+  // useEffect(() => {
+  // skills.forEach((name) => updatePreferredSkills(name));
+  // setUserPrefferedSkills(
+  //   skills.map((name) => ({
+  //     name,
+  //     selected: true,
+  //   }))
+  // );
+  // setTotalPreferredSkills(skills.length);
+  // }, []);
 
   const handlePreferredRolesSave = async () => {
     const userSkills = preferredSkills.filter((role) => role.selected);

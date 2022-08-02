@@ -35,7 +35,7 @@ function Tags({ setTags, id, companyDetails }) {
   //   await axios({
   //     method: "get",
   //     // withCredentials: true,
-  //     url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
+  //     url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
   //   }).then((data) => {
   //     if (data.data.tags.length > 0) {
   //       setPreferredSkills(data.data.tags);
@@ -44,8 +44,11 @@ function Tags({ setTags, id, companyDetails }) {
   // }, [])
 
   useEffect(() => {
-    if (companyDetails && companyDetails.tags.length > 0) {
-      setPreferredSkills(companyDetails.tags);
+    if (companyDetails) {
+      const tags = companyDetails.tags || [];
+      if (tags.length > 0) {
+        setPreferredSkills(companyDetails.tags);
+      }
     }
   }, [companyDetails])
 

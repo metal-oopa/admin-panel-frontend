@@ -36,7 +36,7 @@ function PrefferedLocation({ setLocation, id, companyDetails }) {
   //   await axios({
   //     method: "get",
   //     // withCredentials: true,
-  //     url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
+  //     url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
   //   }).then((data) => {
   //     if (data.data.locations.length > 0) {
   //       setPreferredLocation(data.data.locations);
@@ -44,9 +44,14 @@ function PrefferedLocation({ setLocation, id, companyDetails }) {
   //   });
   // }, [])
 
+  // TODO : Get user preferred location
   useEffect(() => {
-    if (companyDetails && companyDetails.locations.length > 0) {
-      setPreferredLocation(companyDetails.locations);
+
+    if (companyDetails) {
+      const locations = companyDetails.locations || [];
+      if (locations.length > 0) {
+        setPreferredLocation(companyDetails.locations);
+      }
     }
   }, [companyDetails])
 

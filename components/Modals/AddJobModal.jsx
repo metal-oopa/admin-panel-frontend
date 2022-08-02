@@ -1,5 +1,5 @@
 import { Editor } from 'draft-js';
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import RichEditor from '../General/Editor';
 import axios from 'axios';
 
@@ -7,6 +7,7 @@ function AddJobModal({
   showAddJobModal,
   setShowAddJobModal,
   jobs,
+  setJobs,
   curItem,
   isEdit,
   index,
@@ -19,16 +20,11 @@ function AddJobModal({
       { name: 'Internship', selected: false }
     ]
   );
-  // console.log(curItem)
-
   const [jobname, setJobName] = useState('');
-
-
   const [autocomplete, setAutocomplete] = useState({
     disabled: true,
     data: [],
   });
-
   const [description, setDescription] = useState("");
   const handleDescriptionChange = (htmlContent) => {
     setDescription(htmlContent);
@@ -37,10 +33,12 @@ function AddJobModal({
   const handleResponsibilityChange = (htmlContent) => {
     setResponsibilities(htmlContent);
   };
-
-
   const [inputValue, setInputValue] = useState('');
 
+  // load company details
+  useEffect(() => {
+    if (companyDetails) { }
+  }, [companyDetails]);
 
   const handleInputValueChange = (e) => {
     setInputValue(e.target.value);
@@ -95,34 +93,34 @@ function AddJobModal({
       })
 
       // add axios call to update company details
-      await axios({
+      const updatedCompanyDetails = await axios({
         method: "put",
         data: companyDetails,
         // withCredentials: true,
-        url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${companyDetails._id}`,
+        url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
       });
 
+      // update jobs
+      setJobs(updatedCompanyDetails.data.jobs);
       setShowAddJobModal(0);
-
       return;
     }
     // add job
     const newJob = { title: jobTitle, jobType: jobname, description: description, responsibilities: responsibilities };
+
+    companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
     companyDetails.jobs.push(newJob);
-    console.log(companyDetails)
+
     // add axios call to update company details
-    await axios({
+    const uodatedCompanyDetails = await axios({
       method: "put",
       data: companyDetails,
       // withCredentials: true,
-      url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${companyDetails._id}`,
+      url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
     });
 
-    // var newData = jobType;
-
+    setJobs(uodatedCompanyDetails.data.jobs);
     setShowAddJobModal(0);
-
-    // // console.log(newJob)
 
     // if (isEdit) {
     //   if (newJob.title !== '') jobs[index].title = newJob.title;

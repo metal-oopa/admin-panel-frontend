@@ -25,7 +25,7 @@ function Profile({ id, companyDetails }) {
   //     await axios({
   //       method: "get",
   //       // withCredentials: true,
-  //       url: `https://admin-panel-backend.vercel.app/get-idea-for-students/?_id=${id}`,
+  //       url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
   //     }).then((data) => {
   //       console.log(data.data);
   //       setCompanyDetails(data.data);
@@ -107,7 +107,7 @@ function Profile({ id, companyDetails }) {
         image: companyDetails.image,
       },
       // withCredentials: true,
-      url: `https://admin-panel-backend.vercel.app/update-student-idea/?_id=${id}`,
+      url: `https://admin-panel-backend.vercel.app/update-company/?_id=${id}`,
     });
 
     console.log(newData);

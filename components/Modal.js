@@ -18,7 +18,7 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
       companyLogo,
     };
 
-    await axios({
+    const response = await axios({
       method: "post",
       data: {
         title: companyName,
@@ -37,10 +37,10 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
         instagram: "",
       },
       // withCredentials: true,
-      url: "https://admin-panel-backend.vercel.app/create-idea-for-students",
+      url: "https://admin-panel-backend.vercel.app/create-company",
     });
 
-    setCompanyList((companyList) => [...companyList, company]);
+    setCompanyList((companyList) => [...companyList, response.data]);
     setCompanyName("");
     setLinkedIn("");
     setCompanyLogo(null);
