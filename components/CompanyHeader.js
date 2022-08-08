@@ -35,6 +35,7 @@ function CompanyHeader({ id, companyDetails }) {
   const [linkedIn, setLinkedIn] = useState("");
   const [companyLogo, setCompanyLogo] = useState("");
   const [companyTagline, setCompanyTagline] = useState("");
+  const [featured, setFeatured] = useState(false);
 
   // useEffect(async () => {
   //   if (id) {
@@ -56,6 +57,8 @@ function CompanyHeader({ id, companyDetails }) {
       setCompanyName(companyDetails.title);
       setLinkedIn(companyDetails.linkedin);
       setCompanyLogo(companyDetails.image);
+      setCompanyTagline(companyDetails.tagline);
+      setFeatured(companyDetails.featured);
     }
   }, [companyDetails]);
 
@@ -72,6 +75,9 @@ function CompanyHeader({ id, companyDetails }) {
       data: {
         title: companyName,
         linkedin: linkedIn,
+        image: companyLogo,
+        tagline: companyTagline,
+        featured: featured,
         subtitle: companyDetails.subtitle,
         description: companyDetails.description,
         link: companyDetails.link,
@@ -82,7 +88,6 @@ function CompanyHeader({ id, companyDetails }) {
         teamSize: companyDetails.teamSize,
         facebook: companyDetails.facebook,
         instagram: companyDetails.instagram,
-        numberOfAssignments: companyDetails.numberOfAssignments,
         numberOfOpenings: companyDetails.numberOfOpenings,
         image: companyDetails.image,
       },
@@ -95,6 +100,16 @@ function CompanyHeader({ id, companyDetails }) {
     // setLinkedIn("");
     // setCompanyLogo(null);
     // setModalOpen(false);
+  };
+
+  const handleDelete = async (e) => {
+    await axios({
+      method: "delete",
+      // withCredentials: true,
+      url: `https://admin-panel-backend.vercel.app/delete-company/${id}`,
+    });
+
+    notify();
   };
 
   const handleFileChange = (e) => {
@@ -159,7 +174,13 @@ function CompanyHeader({ id, companyDetails }) {
               />
             </div>
             <div className="flex w-full h-1/4">
-              <input type="checkbox" name="isfeatured" id="isfeatured" />
+              <input
+                type="checkbox"
+                name="isfeatured"
+                id="isfeatured"
+                checked={featured}
+                onChange={(e) => setFeatured(e.target.checked)}
+              />
               <label className="font-inter text-sm ml-2" htmlFor="">
                 Featured
               </label>
@@ -178,6 +199,7 @@ function CompanyHeader({ id, companyDetails }) {
             <button
               className="delete-button"
               // onClick={() => fileRef.current.click()}
+              onClick={() => handleDelete()}
             >
               Delete
             </button>

@@ -11,41 +11,19 @@ import { AiFillCheckCircle, AiOutlinePlus } from "react-icons/ai";
 function Profile({ id, companyDetails }) {
   // const [companyDetails, setCompanyDetails] = useState();
   const [facebook, setFacebook] = useState("");
+  const [twitter, setTwitter] = useState("");
   const [website, setWebsite] = useState("");
   const [instagram, setInstagram] = useState("");
   const [openings, setOpenings] = useState("");
-  const [assignments, setAssignments] = useState("");
   const [location, setLocation] = useState();
   const [tags, setTags] = useState();
-  const [teamSize, setTeamSize] = useState();
+  const [teamSize, setTeamSize] = useState("");
   const [aboutCompany, setAboutCompany] = useState("");
   const [companyFunding, setCompanyFunding] = useState("");
   const [companyDescription, setCompanyDescription] = useState("");
   const handleEditorChange = (htmlContent) => {
-    setAboutCompany(htmlContent);
+    setCompanyDescription(htmlContent);
   };
-
-  // useEffect(async () => {
-  //   if (id) {
-  //     await axios({
-  //       method: "get",
-  //       // withCredentials: true,
-  //       url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
-  //     }).then((data) => {
-  //       console.log(data.data);
-  //       setCompanyDetails(data.data);
-  //       setFacebook(data.data.facebook);
-  //       setWebsite(data.data.link);
-  //       setInstagram(data.data.instagram);
-  //       setOpenings(data.data.numberOfOpenings);
-  //       setAssignments(data.data.numberOfAssignments);
-  //       setLocation(data.data.locations);
-  //       setTags(data.data.tags);
-  //       setTeamSize(data.data.teamSize);
-  //       setAboutCompany(data.data.description);
-  //     });
-  //   }
-  // }, []);
 
   useEffect(() => {
     if (companyDetails) {
@@ -53,64 +31,62 @@ function Profile({ id, companyDetails }) {
       setWebsite(companyDetails.link);
       setInstagram(companyDetails.instagram);
       setOpenings(companyDetails.numberOfOpenings);
-      setAssignments(companyDetails.numberOfAssignments);
       setLocation(companyDetails.locations);
       setTags(companyDetails.tags);
       setTeamSize(companyDetails.teamSize);
-      setAboutCompany(companyDetails.description);
+      setAboutCompany(companyDetails.about);
+      setCompanyFunding(companyDetails.totalFunding);
+      setCompanyDescription(companyDetails.description);
     }
   }, [companyDetails]);
 
   const onSaveClick = async () => {
-    // const newData = {
-    //   facebook: facebook,
-    //   website: website,
-    //   instagram: instagram,
-    //   openings: openings,
-    //   assignments: assignments,
-    //   location: location,
-    //   tags: tags,
-    //   teamSize: teamSize,
-    //   aboutCompany: aboutCompany,
-    // };
-
     const newData = {
       facebook: facebook,
       link: website,
+      twitter: companyDetails.twitter,
       instagram: instagram,
       numberOfOpenings: openings,
-      numberOfAssignments: assignments,
+      // numberOfAssignments: assignments,
+      about: aboutCompany,
+      totalFunding: companyFunding,
+      description: companyDescription,
       locations: location,
       tags: tags,
       teamSize: teamSize,
-      description: aboutCompany,
       title: companyDetails.title,
       linkedin: companyDetails.linkedin,
       subtitle: companyDetails.subtitle,
       jobs: companyDetails.jobs,
       keyPeople: companyDetails.keyPeople,
       image: companyDetails.image,
+      featured: companyDetails.featured,
     };
 
     await axios({
       method: "put",
-      data: {
-        facebook: facebook,
-        link: website,
-        instagram: instagram,
-        numberOfOpenings: openings,
-        numberOfAssignments: assignments,
-        locations: location,
-        tags: tags,
-        teamSize: teamSize,
-        description: aboutCompany,
-        title: companyDetails.title,
-        linkedin: companyDetails.linkedin,
-        subtitle: companyDetails.subtitle,
-        jobs: companyDetails.jobs,
-        keyPeople: companyDetails.keyPeople,
-        image: companyDetails.image,
-      },
+      data: newData,
+      // {
+      //   facebook: facebook,
+      //   link: website,
+      //   instagram: instagram,
+      //   numberOfOpenings: openings,
+      //   about: aboutCompany,
+      //   totalFunding: companyFunding,
+      //   description: companyDescription,
+      //   // numberOfAssignments: assignments,
+      //   locations: location,
+      //   tags: tags,
+      //   teamSize: teamSize,
+      //   description: aboutCompany,
+      //   title: companyDetails.title,
+      //   linkedin: companyDetails.linkedin,
+      //   subtitle: companyDetails.subtitle,
+      //   jobs: companyDetails.jobs,
+      //   keyPeople: companyDetails.keyPeople,
+      //   image: companyDetails.image,
+      //   featured: companyDetails.featured,
+      // },
       // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/update-company/?_id=${id}`,
     });
@@ -158,8 +134,8 @@ function Profile({ id, companyDetails }) {
         <div className="flex w-full h-1/4">
           <input
             type="text"
-            value={facebook}
-            onChange={(e) => setFacebook(e.target.value)}
+            value={instagram}
+            onChange={(e) => setInstagram(e.target.value)}
             placeholder="www.instagram.com/your-profile"
             className="px-1 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative bg-white text-sm border rounded-tr-[3.5px] rounded-br-[3.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2  w-full  transition duration-200 ease-in"
           />
@@ -167,8 +143,8 @@ function Profile({ id, companyDetails }) {
         <div className="flex w-full h-1/4">
           <input
             type="text"
-            value={instagram}
-            onChange={(e) => setInstagram(e.target.value)}
+            value={twitter}
+            onChange={(e) => setTwitter(e.target.value)}
             placeholder="www.twitter.com/your-profile"
             className="px-1 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative bg-white text-sm border rounded-tr-[3.5px] rounded-br-[3.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2  w-full  transition duration-200 ease-in"
           />
@@ -182,8 +158,8 @@ function Profile({ id, companyDetails }) {
           </p>
           <input
             type="text"
-            value={assignments}
-            onChange={(e) => setAssignments(e.target.value)}
+            value={openings}
+            onChange={(e) => setOpenings(e.target.value)}
             placeholder="Number of Jobs and Assignments"
             className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
           />
@@ -234,28 +210,22 @@ function Profile({ id, companyDetails }) {
 
       <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">Team Size</p>
-        {/* <input
-                    type="text"
-                    value={teamSize}
-                    onChange={(e) => setTeamSize(e.target.value)}
-                    placeholder="Example: Artifical Intelligence, Machine Learning, Saas..."
-                    className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
-                /> */}
-        <TeamSize
+        <input
+          type="text"
+          value={teamSize}
+          onChange={(e) => setTeamSize(e.target.value)}
+          placeholder="Example: 10-20, 100+, >1000..."
+          className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
+        />
+        {/* <TeamSize
           setTeamSize={setTeamSize}
           id={id}
           companyDetails={companyDetails}
-        />
+        /> */}
       </div>
       <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">Funding</p>
-        {/* <input
-                    type="text"
-                    value={teamSize}
-                    onChange={(e) => setTeamSize(e.target.value)}
-                    placeholder="Example: Artifical Intelligence, Machine Learning, Saas..."
-                    className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
-                /> */}
+
         <input
           type="text"
           value={companyFunding}
@@ -265,25 +235,28 @@ function Profile({ id, companyDetails }) {
         />
       </div>
 
-      <div className="px-10 w-full space-y-2">
+      {/* 2 rich editor components in the same page will cause problem */}
+      {/* <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">
           About Company (in Jobs)
         </p>
-        {/* <textarea
+         <textarea
           type="text"
           value={aboutCompany}
           onChange={(e) => setAboutCompany(e.target.value)}
           placeholder="Give a brief description"
           className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-base border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent h-52"
-        /> */}
+        /> 
         <RichEditor
           htmlContent={aboutCompany}
           setAboutCompany={setAboutCompany}
           handleEditorChange={handleEditorChange}
+          purpose="aboutCompany"
           id={id}
           companyDetails={companyDetails}
         />
-      </div>
+      </div> 
+      */}
       <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">
           Company Description
@@ -296,11 +269,12 @@ function Profile({ id, companyDetails }) {
           className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-base border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent h-52"
         /> */}
         <RichEditor
-          htmlContent={aboutCompany}
-          setAboutCompany={setAboutCompany}
+          htmlContent={companyDescription}
+          setAboutCompany={setCompanyDescription}
           handleEditorChange={handleEditorChange}
           id={id}
-          companyDescription={setCompanyDescription}
+          purpose="companyDescription"
+          companyDetails={companyDetails}
         />
       </div>
 

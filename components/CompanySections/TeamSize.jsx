@@ -20,25 +20,9 @@ function TeamSize({ setTeamSize, id, companyDetails }) {
   });
   const [inputValue, setInputValue] = useState("");
 
-  // * Get team size
-  // useEffect(async () => {
-  //   await axios({
-  //     method: "get",
-  //     // withCredentials: true,
-  //     url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
-  //   }).then((data) => {
-  //     if (data.data.teamSize.length > 0) {
-  //       setPreferredSkills(data.data.teamSize);
-  //     }
-  //   });
-  // }, [])
-
   useEffect(() => {
     if (companyDetails) {
-      const teamSize = companyDetails.teamSize || [];
-      if (teamSize.length > 0) {
-        setPreferredSkills(companyDetails.teamSize);
-      }
+      setPreferredSkills(companyDetails.teamSize);
     }
   }, [companyDetails]);
 

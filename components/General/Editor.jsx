@@ -30,9 +30,14 @@ const RichEditor = ({
 
   useEffect(() => {
     // console.log("hi");
-    if (companyDetails) {
+    if (companyDetails && purpose === "companyDescription") {
       setEditorState(() =>
         EditorState.createWithContent(stateFromHTML(companyDetails.description))
+      );
+    }
+    if (companyDetails && purpose === "aboutCompany") {
+      setEditorState(() =>
+        EditorState.createWithContent(stateFromHTML(companyDetails.about))
       );
     }
     if (curItem && purpose === "jobDescription") {
