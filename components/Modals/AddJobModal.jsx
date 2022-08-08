@@ -1,7 +1,9 @@
-import { Editor } from 'draft-js';
-import React, { useRef, useState, useEffect } from 'react';
-import RichEditor from '../General/Editor';
-import axios from 'axios';
+import { Editor } from "draft-js";
+import React, { useRef, useState, useEffect } from "react";
+import RichEditor from "../General/Editor";
+import toast, { Toaster } from "react-hot-toast";
+import axios from "axios";
+import { AiFillCheckCircle } from "react-icons/ai";
 
 function AddJobModal({
   showAddJobModal,
@@ -13,14 +15,12 @@ function AddJobModal({
   index,
   companyDetails,
 }) {
-  const [jobTitle, setJobTitle] = useState('')
-  const [jobType, setjobType] = useState(
-    [
-      { name: 'Fulltime', selected: false },
-      { name: 'Internship', selected: false }
-    ]
-  );
-  const [jobname, setJobName] = useState('');
+  const [jobTitle, setJobTitle] = useState("");
+  const [jobType, setjobType] = useState([
+    { name: "Fulltime", selected: false },
+    { name: "Internship", selected: false },
+  ]);
+  const [jobname, setJobName] = useState("");
   const [autocomplete, setAutocomplete] = useState({
     disabled: true,
     data: [],
@@ -33,20 +33,21 @@ function AddJobModal({
   const handleResponsibilityChange = (htmlContent) => {
     setResponsibilities(htmlContent);
   };
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   // load company details
   useEffect(() => {
-    if (companyDetails) { }
+    if (companyDetails) {
+    }
   }, [companyDetails]);
 
   const handleInputValueChange = (e) => {
     setInputValue(e.target.value);
-    if (e.target.value.trim() === '')
+    if (e.target.value.trim() === "")
       setAutocomplete({ disabled: true, data: [] });
     else {
       const autocompleteData = [];
-      const regex = new RegExp(e.target.value, 'i');
+      const regex = new RegExp(e.target.value, "i");
 
       jobType.forEach((role) => {
         if (regex.test(role.name)) autocompleteData.push(role.name);
@@ -60,23 +61,19 @@ function AddJobModal({
   };
 
   const updatejobType = (roleName) => {
-
     const newData = jobType.map((role) => {
-      if (role.name === roleName)
-        role.selected = !role.selected;
-      if (role.selected === true) setJobName(role.name)
+      if (role.name === roleName) role.selected = !role.selected;
+      if (role.selected === true) setJobName(role.name);
 
       return role;
     });
-    setInputValue('');
+    setInputValue("");
     setAutocomplete({
       disabled: true,
       data: [],
     });
 
     setjobType(newData);
-
-
   };
 
   const handleSaveJobClick = async () => {
@@ -84,13 +81,13 @@ function AddJobModal({
       // update job
       companyDetails.jobs.map((job, index) => {
         if (job._id === curItem._id) {
-          job.title = jobTitle === '' ? curItem.title : jobTitle;
-          job.jobType = jobname === '' ? curItem.jobType : jobname;
+          job.title = jobTitle === "" ? curItem.title : jobTitle;
+          job.jobType = jobname === "" ? curItem.jobType : jobname;
           job.description = description;
           job.responsibilities = responsibilities;
         }
         return job;
-      })
+      });
 
       // add axios call to update company details
       const updatedCompanyDetails = await axios({
@@ -106,9 +103,15 @@ function AddJobModal({
       return;
     }
     // add job
-    const newJob = { title: jobTitle, jobType: jobname, description: description, responsibilities: responsibilities };
+    const newJob = {
+      title: jobTitle,
+      jobType: jobname,
+      description: description,
+      responsibilities: responsibilities,
+    };
 
-    companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
+    companyDetails.jobs =
+      companyDetails.jobs === undefined ? [] : companyDetails.jobs;
     companyDetails.jobs.push(newJob);
 
     // add axios call to update company details
@@ -149,14 +152,44 @@ function AddJobModal({
 
     // setDescription('');
     // setResponsibilities('');
+  };
+  const handleClose = (e) => {
+    if (e.target.id === "container") {
+      setShowAddJobModal(false);
+    }
+  };
+  const message = () => {
+    return (
+      <div className="flex items-center justify-betwen">
+        <div className="text-white">
+          <AiFillCheckCircle />
+        </div>
+        <div className=" ml-2 font-inter text-white text-[14px] ">
+          Details saved successfully!
+        </div>
+      </div>
+    );
+  };
 
-  }
-
+  const notify = () =>
+    toast(message, {
+      position: "bottom-center",
+      style: {
+        width: "fit-content",
+        borderRadius: "9999px",
+        fontFamily: "Inter",
+        backgroundColor: "black",
+      },
+    });
   return (
     <div>
       {showAddJobModal ? (
         <>
-          <div className="bg-black bg-opacity-70 w-full h-full fixed z-50 inset-0 flex items-center justify-center edit-overlay">
+          <div
+            id="container"
+            onClick={handleClose}
+            className="bg-black bg-opacity-70 w-full h-full fixed z-50 inset-0 flex items-center justify-center edit-overlay"
+          >
             <div className="relative max-h-[784px] flex-col h-[94%] rounded-lg w-[37.5rem] overflow-y-auto bg-white z-10 text-black">
               <div className="top-0 sticky z-50 flex items-center justify-between p-5 bg-[#eff2f6] py-[9px] px-6 rounded-t-lg max-h-[60px] rounded-b-sm my-auto h-[200px]">
                 <svg
@@ -195,22 +228,22 @@ function AddJobModal({
                   <p className="text-[15px] font-semibold text-[#201e27]">
                     Type
                   </p>
-                  <input
+                  {/* <input
                     type="text"
                     defaultValue={curItem.jobType}
                     // value={inputValue}
                     onChange={handleInputValueChange}
                     placeholder="Fulltime , Internship"
                     className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
-                  />
+                  /> */}
 
                   <div
-                    className={`${autocomplete.disabled ? 'hidden' : ''
-                      } ml-[0.5rem] w-[90%] absolute z-10 border rounded-md  py-1 bg-white
+                    className={`${
+                      autocomplete.disabled ? "hidden" : ""
+                    } ml-[0.5rem] w-[90%] absolute z-10 border rounded-md  py-1 bg-white
                         max-h-60 overflow-y-scroll`}
                   >
                     {autocomplete.data.map((item, index) => {
-
                       return (
                         <div
                           key={index}
@@ -220,7 +253,7 @@ function AddJobModal({
                         >
                           {item}
                         </div>
-                      )
+                      );
                     })}
                   </div>
 
@@ -231,19 +264,19 @@ function AddJobModal({
                           key={index}
                           className="preferred_roles"
                           style={{
-                            background: role.selected ? '#61a0ff' : '',
-                            color: role.selected ? '#fff' : '',
+                            background: role.selected ? "#61a0ff" : "",
+                            color: role.selected ? "#fff" : "",
                           }}
                           onClick={() => updatejobType(role.name)}
                         >
                           {role.name}
                         </span>
-                      )
+                      );
                     })}
                   </div>
                 </div>
 
-                <div className='mt-[25px]'>
+                {/* <div className='mt-[25px]'>
                   <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">Description</p>
                   <RichEditor
                     htmlContent={curItem.description}
@@ -251,23 +284,34 @@ function AddJobModal({
                     curItem={curItem}
                     purpose="jobDescription"
                   />
-                </div>
-                <div className='mt-[25px]'>
-                  <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">Responsibilities</p>
+                </div> */}
+                <div className="mt-[25px]">
+                  <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">
+                    Responsibilities
+                  </p>
                   <RichEditor
                     htmlContent={curItem.responsibilities}
                     handleEditorChange={handleResponsibilityChange}
                     curItem={curItem}
-                    purpose='jobResponsibilities'
+                    purpose="jobResponsibilities"
                   />
                 </div>
               </div>
               <hr />
-              <button className="save-button float-right m-[20px] py-[10px] " onClick={handleSaveJobClick}>
+              <button
+                className="save-button float-right m-[20px] py-[10px] "
+                onClick={() => {
+                  notify();
+                  setTimeout(() => {
+                    handleSaveJobClick();
+                    setShowAddJobModal(false);
+                  }, 2000);
+                }}
+              >
                 Save
               </button>
             </div>
-
+            <Toaster />
           </div>
         </>
       ) : null}

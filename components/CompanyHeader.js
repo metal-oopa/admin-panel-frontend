@@ -1,14 +1,40 @@
-import { AiOutlinePlus } from "react-icons/ai";
+import { AiFillCheckCircle, AiOutlinePlus } from "react-icons/ai";
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
 
 function CompanyHeader({ id, companyDetails }) {
+  const message = () => {
+    return (
+      <div className="flex items-center justify-betwen">
+        <div className="text-white">
+          <AiFillCheckCircle />
+        </div>
+        <div className=" ml-2 font-inter text-white text-[14px] ">
+          Details saved successfully!
+        </div>
+      </div>
+    );
+  };
+
+  const notify = () => {
+    toast(message, {
+      position: "bottom-center",
+      style: {
+        width: "fit-content",
+        borderRadius: "9999px",
+        fontFamily: "Inter",
+        backgroundColor: "black",
+      },
+    });
+  };
   const fileRef = useRef(null);
 
   // const [companyDetails, setCompanyDetails] = useState();
   const [companyName, setCompanyName] = useState("");
   const [linkedIn, setLinkedIn] = useState("");
   const [companyLogo, setCompanyLogo] = useState("");
+  const [companyTagline, setCompanyTagline] = useState("");
 
   // useEffect(async () => {
   //   if (id) {
@@ -115,9 +141,6 @@ function CompanyHeader({ id, companyDetails }) {
               />
             </div>
             <div className="flex w-full h-1/4">
-              <span className="text-[12px] bg-gray-200 rounded-tl-[3.5px] rounded-bl-[3.5px] flex items-center justify-center px-2 text-gray-500 border">
-                https://
-              </span>
               <input
                 type="text"
                 value={linkedIn}
@@ -126,21 +149,49 @@ function CompanyHeader({ id, companyDetails }) {
                 className="px-1 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative bg-white text-sm border rounded-tr-[3.5px] rounded-br-[3.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2  w-full  transition duration-200 ease-in"
               />
             </div>
+            <div className="flex w-full h-1/4">
+              <input
+                type="text"
+                value={companyTagline}
+                onChange={(e) => setCompanyTagline(e.target.value)}
+                placeholder="Enter your Company's Tagline"
+                className="px-1 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative bg-white text-sm border rounded-tr-[3.5px] rounded-br-[3.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2  w-full  transition duration-200 ease-in"
+              />
+            </div>
+            <div className="flex w-full h-1/4">
+              <input type="checkbox" name="isfeatured" id="isfeatured" />
+              <label className="font-inter text-sm ml-2" htmlFor="">
+                Featured
+              </label>
+            </div>
           </div>
         </div>
         <input type="file" ref={fileRef} hidden onChange={handleFileChange} />
         <div className="flex justify-between w-full mt-[1.5rem]">
+          <div className="flex items-center  justify-between">
+            <button
+              className="save-button mr-8"
+              onClick={() => fileRef.current.click()}
+            >
+              Edit
+            </button>
+            <button
+              className="delete-button"
+              // onClick={() => fileRef.current.click()}
+            >
+              Delete
+            </button>
+          </div>
           <button
+            onClick={() => notify()}
             className="save-button"
-            onClick={() => fileRef.current.click()}
+            type="submit"
           >
-            Edit
-          </button>
-          <button className="save-button" type="submit">
             Save
           </button>
         </div>
       </form>
+      <Toaster position="bottom-center" />
     </div>
   );
 }
