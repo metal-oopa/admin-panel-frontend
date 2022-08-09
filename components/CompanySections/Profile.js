@@ -235,7 +235,6 @@ function Profile({ id, companyDetails }) {
         />
       </div>
 
-      {/* 2 rich editor components in the same page will cause problem */}
       {/* <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">
           About Company (in Jobs)
