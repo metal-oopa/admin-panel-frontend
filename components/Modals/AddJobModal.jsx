@@ -310,6 +310,8 @@ function AddJobModal({
               >
                 Save
               </button>
+
+              {isEdit && <button className="delete-button">Delete</button>}
             </div>
             <Toaster />
           </div>
