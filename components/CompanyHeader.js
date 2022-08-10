@@ -2,6 +2,7 @@ import { AiFillCheckCircle, AiOutlinePlus } from "react-icons/ai";
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
+import Router from "next/router";
 
 function CompanyHeader({ id, companyDetails }) {
   const message = () => {
@@ -103,13 +104,15 @@ function CompanyHeader({ id, companyDetails }) {
   };
 
   const handleDelete = async (e) => {
+    notify();
+
     await axios({
       method: "delete",
       // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/delete-company/${id}`,
     });
 
-    notify();
+    Router.push("/dashboard/companies");
   };
 
   const handleFileChange = (e) => {

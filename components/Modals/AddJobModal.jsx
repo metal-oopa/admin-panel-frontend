@@ -238,9 +238,8 @@ function AddJobModal({
                   /> */}
 
                   <div
-                    className={`${
-                      autocomplete.disabled ? "hidden" : ""
-                    } ml-[0.5rem] w-[90%] absolute z-10 border rounded-md  py-1 bg-white
+                    className={`${autocomplete.disabled ? "hidden" : ""
+                      } ml-[0.5rem] w-[90%] absolute z-10 border rounded-md  py-1 bg-white
                         max-h-60 overflow-y-scroll`}
                   >
                     {autocomplete.data.map((item, index) => {
