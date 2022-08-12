@@ -16,6 +16,7 @@ function AddJobModal({
   companyDetails,
 }) {
   const [jobTitle, setJobTitle] = useState("");
+  const [featured, setFeatured] = useState(false);
   const [jobType, setjobType] = useState([
     { name: "Fulltime", selected: false },
     { name: "Internship", selected: false },
@@ -241,6 +242,20 @@ function AddJobModal({
                     className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
                   />
                 </div>
+
+                <div className="flex w-full h-1/4 mt-4">
+                  <input
+                    type="checkbox"
+                    name="isfeatured"
+                    id="isfeatured"
+                    checked={featured}
+                    onChange={(e) => setFeatured(e.target.checked)}
+                  />
+                  <label className="font-inter text-sm ml-2" htmlFor="">
+                    Featured
+                  </label>
+                </div>
+
                 <div className="w-full mt-[25px]">
                   <p className="text-[15px] font-semibold text-[#201e27]">
                     Type
@@ -291,6 +306,8 @@ function AddJobModal({
                     })}
                   </div>
                 </div>
+
+
 
                 {/* <div className='mt-[25px]'>
                   <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">Description</p>

@@ -27,9 +27,11 @@ function Profile({ id, companyDetails }) {
 
   useEffect(() => {
     if (companyDetails) {
+      console.log(companyDetails);
       setFacebook(companyDetails.facebook);
       setWebsite(companyDetails.link);
       setInstagram(companyDetails.instagram);
+      setTwitter(companyDetails.twitter);
       setOpenings(companyDetails.numberOfOpenings);
       setLocation(companyDetails.locations);
       setTags(companyDetails.tags);
@@ -44,10 +46,9 @@ function Profile({ id, companyDetails }) {
     const newData = {
       facebook: facebook,
       link: website,
-      twitter: companyDetails.twitter,
+      twitter: twitter,
       instagram: instagram,
       numberOfOpenings: openings,
-      // numberOfAssignments: assignments,
       about: aboutCompany,
       totalFunding: companyFunding,
       description: companyDescription,
@@ -66,27 +67,6 @@ function Profile({ id, companyDetails }) {
     await axios({
       method: "put",
       data: newData,
-      // {
-      //   facebook: facebook,
-      //   link: website,
-      //   instagram: instagram,
-      //   numberOfOpenings: openings,
-      //   about: aboutCompany,
-      //   totalFunding: companyFunding,
-      //   description: companyDescription,
-      //   // numberOfAssignments: assignments,
-      //   locations: location,
-      //   tags: tags,
-      //   teamSize: teamSize,
-      //   description: aboutCompany,
-      //   title: companyDetails.title,
-      //   linkedin: companyDetails.linkedin,
-      //   subtitle: companyDetails.subtitle,
-      //   jobs: companyDetails.jobs,
-      //   keyPeople: companyDetails.keyPeople,
-      //   image: companyDetails.image,
-      //   featured: companyDetails.featured,
-      // },
       // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/update-company/?_id=${id}`,
     });
@@ -256,6 +236,7 @@ function Profile({ id, companyDetails }) {
         />
       </div> 
       */}
+
       <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">
           Company Description

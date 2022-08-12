@@ -33,7 +33,7 @@ function CompanyHeader({ id, companyDetails }) {
 
   // const [companyDetails, setCompanyDetails] = useState();
   const [companyName, setCompanyName] = useState("");
-  const [linkedIn, setLinkedIn] = useState("");
+  const [linkedin, setLinkedin] = useState("");
   const [companyLogo, setCompanyLogo] = useState("");
   const [companyTagline, setCompanyTagline] = useState("");
   const [featured, setFeatured] = useState(false);
@@ -47,7 +47,7 @@ function CompanyHeader({ id, companyDetails }) {
   //     }).then((data) => {
   //       setCompanyDetails(data.data);
   //       setCompanyName(data.data.title);
-  //       setLinkedIn(data.data.linkedin);
+  //       setLinkedin(data.data.linkedin);
   //       setCompanyLogo(data.data.image);
   //     });
   //   }
@@ -56,7 +56,7 @@ function CompanyHeader({ id, companyDetails }) {
   useEffect(() => {
     if (companyDetails) {
       setCompanyName(companyDetails.title);
-      setLinkedIn(companyDetails.linkedin);
+      setLinkedin(companyDetails.linkedin);
       setCompanyLogo(companyDetails.image);
       setCompanyTagline(companyDetails.tagline);
       setFeatured(companyDetails.featured);
@@ -67,7 +67,7 @@ function CompanyHeader({ id, companyDetails }) {
     e.preventDefault();
     // const company = {
     //   companyName,
-    //   linkedIn,
+    //   linkedin,
     //   companyLogo,
     // };
 
@@ -75,7 +75,7 @@ function CompanyHeader({ id, companyDetails }) {
       method: "put",
       data: {
         title: companyName,
-        linkedin: linkedIn,
+        linkedin: linkedin,
         image: companyLogo,
         tagline: companyTagline,
         featured: featured,
@@ -98,7 +98,7 @@ function CompanyHeader({ id, companyDetails }) {
 
     // setCompanyList((companyList) => [...companyList, company]);
     // setCompanyName("");
-    // setLinkedIn("");
+    // setLinkedin("");
     // setCompanyLogo(null);
     // setModalOpen(false);
   };
@@ -161,8 +161,8 @@ function CompanyHeader({ id, companyDetails }) {
             <div className="flex w-full h-1/4">
               <input
                 type="text"
-                value={linkedIn}
-                onChange={(e) => setLinkedIn(e.target.value)}
+                value={linkedin}
+                onChange={(e) => setLinkedin(e.target.value)}
                 placeholder="www.linkedin.com/your-profile"
                 className="px-1 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative bg-white text-sm border rounded-tr-[3.5px] rounded-br-[3.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2  w-full  transition duration-200 ease-in"
               />

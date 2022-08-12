@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import AddJobModal from "../Modals/AddJobModal";
 import axios from "axios";
+import RichEditor from "../General/Editor";
 
 function Jobs({ id, companyDetails }) {
   const [showAddJobModal, setShowAddJobModal] = useState(false);
@@ -8,17 +9,18 @@ function Jobs({ id, companyDetails }) {
   const [curItem, setCurItem] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const [index, setIndex] = useState();
+  const [aboutCompany, setAboutCompany] = useState("");
+  const handleEditorChange = (htmlContent) => {
+    setAboutCompany(htmlContent);
+  };
 
   useEffect(() => {
-    if (
-      companyDetails &&
-      companyDetails.jobs &&
-      companyDetails.jobs.length > 0
-    ) {
-      setJobs(companyDetails.jobs);
-      setIndex(companyDetails.jobs.length);
-      // console.log(companyDetails.jobs);
-    }
+    if (companyDetails)
+      if (companyDetails.jobs && companyDetails.jobs.length > 0) {
+        setJobs(companyDetails.jobs);
+        setIndex(companyDetails.jobs.length);
+      }
+    setAboutCompany(companyDetails.about);
   }, [companyDetails]);
 
   const handleJobClick = (job, index) => {
@@ -42,36 +44,52 @@ function Jobs({ id, companyDetails }) {
   };
 
   return (
-    <div className="px-20">
-      <button
-        className="save-button float-right m-[20px] "
-        onClick={handleSaveJobClick}
-      >
-        Add Job
-      </button>
-      <AddJobModal
-        showAddJobModal={showAddJobModal}
-        setShowAddJobModal={setShowAddJobModal}
-        jobs={jobs}
-        setJobs={setJobs}
-        curItem={curItem}
-        isEdit={isEdit}
-        index={index}
-        companyDetails={companyDetails}
-      />
+    <div className="jobs">
+      <div className="px-10 w-full space-y-2 mt-4">
+        <p className="text-[12px] font-semibold text-[#201e27]">
+          About Company
+        </p>
+        <RichEditor
+          htmlContent={aboutCompany}
+          setAboutCompany={setAboutCompany}
+          handleEditorChange={handleEditorChange}
+          id={id}
+          purpose="aboutCompany"
+          companyDetails={companyDetails}
+        />
+      </div>
 
-      <div className="w-[80%] flex flex-row-rev flex-wrap ">
-        {jobs.map((job, index) => {
-          return (
-            <div
-              key={index}
-              className="cursor-pointer m-[15px]"
-              onClick={() => handleJobClick(job, index)}
-            >
-              <h1>{job.title}</h1>
-            </div>
-          );
-        })}
+      <div className="px-20">
+        <button
+          className="save-button float-right m-[20px] "
+          onClick={handleSaveJobClick}
+        >
+          Add Job
+        </button>
+        <AddJobModal
+          showAddJobModal={showAddJobModal}
+          setShowAddJobModal={setShowAddJobModal}
+          jobs={jobs}
+          setJobs={setJobs}
+          curItem={curItem}
+          isEdit={isEdit}
+          index={index}
+          companyDetails={companyDetails}
+        />
+
+        <div className="w-[80%] flex flex-row-rev flex-wrap ">
+          {jobs.map((job, index) => {
+            return (
+              <div
+                key={index}
+                className="cursor-pointer m-[15px]"
+                onClick={() => handleJobClick(job, index)}
+              >
+                <h1>{job.title}</h1>
+              </div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
