@@ -30,10 +30,10 @@ function AddJobModal({
   const handleDescriptionChange = (htmlContent) => {
     setDescription(htmlContent);
   };
-  const [responsibilities, setResponsibilities] = useState("");
-  const handleResponsibilityChange = (htmlContent) => {
-    setResponsibilities(htmlContent);
-  };
+  // const [responsibilities, setResponsibilities] = useState("");
+  // const handleResponsibilityChange = (htmlContent) => {
+  //   setResponsibilities(htmlContent);
+  // };
   const [inputValue, setInputValue] = useState("");
 
   // load company details
@@ -86,7 +86,7 @@ function AddJobModal({
           job.title = jobTitle === "" ? curItem.title : jobTitle;
           job.jobType = jobname === "" ? curItem.jobType : jobname;
           job.description = description;
-          job.responsibilities = responsibilities;
+          job.featured = featured;
         }
         return job;
       });
@@ -110,6 +110,7 @@ function AddJobModal({
       jobType: jobname,
       description: description,
       responsibilities: responsibilities,
+      featured: featured
     };
 
     companyDetails.jobs =
@@ -225,7 +226,7 @@ function AddJobModal({
                   <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
                 </svg>
                 <h3 className="text-[0.875rem] leading-5 font-semibold m-0">
-                  Add Job
+                  {isEdit ? "Edit Job" : "Add Job"}
                 </h3>
               </div>
 
@@ -320,13 +321,13 @@ function AddJobModal({
                 </div> */}
                 <div className="mt-[25px]">
                   <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">
-                    Responsibilities
+                    Description
                   </p>
                   <RichEditor
-                    htmlContent={curItem.responsibilities}
-                    handleEditorChange={handleResponsibilityChange}
+                    htmlContent={curItem.description}
+                    handleEditorChange={handleDescriptionChange}
                     curItem={curItem}
-                    purpose="jobResponsibilities"
+                    purpose="jobDescription"
                   />
                 </div>
               </div>

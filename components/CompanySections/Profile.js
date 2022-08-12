@@ -27,7 +27,6 @@ function Profile({ id, companyDetails }) {
 
   useEffect(() => {
     if (companyDetails) {
-      console.log(companyDetails);
       setFacebook(companyDetails.facebook);
       setWebsite(companyDetails.link);
       setInstagram(companyDetails.instagram);

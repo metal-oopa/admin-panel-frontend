@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from "react";
 import AddJobModal from "../Modals/AddJobModal";
-import axios from "axios";
 import RichEditor from "../General/Editor";
 
 function Jobs({ id, companyDetails }) {
@@ -32,7 +31,6 @@ function Jobs({ id, companyDetails }) {
   };
 
   const handleSaveJobClick = () => {
-    console.log(curItem);
     setCurItem({
       title: "",
       jobType: "",
@@ -45,7 +43,7 @@ function Jobs({ id, companyDetails }) {
 
   return (
     <div className="jobs">
-      <div className="px-10 w-full space-y-2 mt-4">
+      <div className="px-10 w-full space-y-1 mt-4">
         <p className="text-[12px] font-semibold text-[#201e27]">
           About Company
         </p>
@@ -59,7 +57,7 @@ function Jobs({ id, companyDetails }) {
         />
       </div>
 
-      <div className="px-20">
+      <div className="px-20 ">
         <button
           className="save-button float-right m-[20px] "
           onClick={handleSaveJobClick}

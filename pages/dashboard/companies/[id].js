@@ -27,7 +27,7 @@ function Company() {
         setCompanyDetails(data.data);
       });
     }
-  }, [router.isReady]);
+  }, [router.isReady, id]);
 
   return (
     <div>
