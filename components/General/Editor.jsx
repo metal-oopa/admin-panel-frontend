@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Map } from "immutable";
 import {
   Editor,
   EditorState,
@@ -11,7 +10,6 @@ import {
 import "draft-js/dist/Draft.css";
 import { stateFromHTML } from "draft-js-import-html";
 import { stateToHTML } from "draft-js-export-html";
-import { CubeUVReflectionMapping } from "three";
 
 const RichEditor = ({
   htmlContent,
