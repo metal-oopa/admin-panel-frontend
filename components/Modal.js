@@ -4,6 +4,7 @@ import { AiOutlinePlus } from "react-icons/ai";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import { AiFillCheckCircle } from "react-icons/ai";
+import Router from "next/router";
 
 function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
   const message = () => {
@@ -34,7 +35,7 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
 
   const [companyName, setCompanyName] = useState("");
   const [linkedIn, setLinkedIn] = useState("");
-  const [companyLogo, setCompanyLogo] = useState(null);
+  const [companyLogo, setCompanyLogo] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -50,23 +51,17 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
         title: companyName,
         linkedin: linkedIn,
         image: companyLogo,
-        tagline: "",
-        featured: false,
-        description: "",
-        link: "",
-        about: "",
-        jobs: [],
-        locations: [],
-        tags: [],
-        keyPeople: [],
-        numberOfOpenings: "",
-        teamSize: [],
-        facebook: "",
-        instagram: "",
       },
       // withCredentials: true,
       url: "https://admin-panel-backend.vercel.app/create-company",
     });
+
+    if (response.status === 201) {
+      Router.push(
+        "/dashboard/companies/[id]",
+        `/dashboard/companies/${response.data._id}`
+      );
+    }
 
     setCompanyList((companyList) => [...companyList, response.data]);
     setCompanyName("");

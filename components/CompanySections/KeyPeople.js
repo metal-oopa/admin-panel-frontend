@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
+import AddKeyPeopleModal from "../Modals/AddKeyPeopleModal";
 
 function KeyPeople({ id, companyDetails }) {
   const [people, setPeople] = useState([]);
+  const [showAddKeyPeopleModal, setShowAddKeyPeopleModal] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
 
   useEffect(() => {
     if (
@@ -13,28 +16,37 @@ function KeyPeople({ id, companyDetails }) {
     }
   }, [companyDetails]);
 
-  const handleDeleteClick = (index) => {
-    const newPeople = [...people];
-    newPeople.splice(index, 1);
-    setPeople(newPeople);
-  };
+  const handleDeleteClick = (index) => {};
 
-  const handleAddClick = (index) => {};
+  const handleAddClick = (index) => {
+    setIsEdit(false);
+    setShowAddKeyPeopleModal(true);
+  };
 
   return (
     <div>
       <div className="flex flex-col space-y-6 flex-1 py-10 justify-end relative">
         <p
           className="text-[#62d5bc] text-[12px] font-bold cursor-pointer right-8 absolute top-8"
-          onClick={() => setPeople([...people, ""])}
+          onClick={() => {
+            handleAddClick();
+          }}
         >
           +Add new members
         </p>
+        <AddKeyPeopleModal
+          showAddKeyPeopleModal={showAddKeyPeopleModal}
+          setShowAddKeyPeopleModal={setShowAddKeyPeopleModal}
+          companyDetails={companyDetails}
+          setPeople={setPeople}
+          people={people}
+          isEdit={isEdit}
+        />
 
         <div className="flex items-center mb-2 px-2 flex-col space-y-2">
           {people.map((item, index) => (
             <PeopleForm
-              key={item.id}
+              key={item._id}
               setPeople={setPeople}
               people={people}
               index={index}
@@ -99,16 +111,15 @@ const PeopleForm = ({
           onClick={() => handleDeleteClick(index)}
         >
           <svg
-            stroke="currentColor"
-            fill="currentColor"
-            strokeWidth="0"
-            viewBox="0 0 24 24"
-            aria-label="Close modal"
-            height="1em"
-            width="1em"
             xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="30"
+            height="30"
+            viewBox="0 0 30 30"
+            style=" fill:#000000;"
           >
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
+            <path d="M 22.828125 3 C 22.316375 3 21.804562 3.1954375 21.414062 3.5859375 L 19 6 L 24 11 L 26.414062 8.5859375 C 27.195062 7.8049375 27.195062 6.5388125 26.414062 5.7578125 L 24.242188 3.5859375 C 23.851688 3.1954375 23.339875 3 22.828125 3 z M 17 8 L 5.2597656 19.740234 C 5.2597656 19.740234 6.1775313 19.658 6.5195312 20 C 6.8615312 20.342 6.58 22.58 7 23 C 7.42 23.42 9.6438906 23.124359 9.9628906 23.443359 C 10.281891 23.762359 10.259766 24.740234 10.259766 24.740234 L 22 13 L 17 8 z M 4 23 L 3.0566406 25.671875 A 1 1 0 0 0 3 26 A 1 1 0 0 0 4 27 A 1 1 0 0 0 4.328125 26.943359 A 1 1 0 0 0 4.3378906 26.939453 L 4.3632812 26.931641 A 1 1 0 0 0 4.3691406 26.927734 L 7 26 L 5.5 24.5 L 4 23 z"></path>
           </svg>
         </div>
       </div>

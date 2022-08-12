@@ -38,6 +38,7 @@ function AddJobModal({
   // load company details
   useEffect(() => {
     if (companyDetails) {
+
     }
   }, [companyDetails]);
 
@@ -115,14 +116,14 @@ function AddJobModal({
     companyDetails.jobs.push(newJob);
 
     // add axios call to update company details
-    const uodatedCompanyDetails = await axios({
+    const updatedCompanyDetails = await axios({
       method: "put",
       data: companyDetails,
       // withCredentials: true,
       url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
     });
 
-    setJobs(uodatedCompanyDetails.data.jobs);
+    setJobs(updatedCompanyDetails.data.jobs);
     setShowAddJobModal(0);
 
     // if (isEdit) {
@@ -158,6 +159,22 @@ function AddJobModal({
       setShowAddJobModal(false);
     }
   };
+
+  const handleDeleteJobClick = async () => {
+    companyDetails.jobs.splice(index, 1);
+
+    console.log(companyDetails.jobs);
+
+    const updatedCompanyDetails = await axios({
+      method: "put",
+      data: companyDetails,
+      // withCredentials: true,
+      url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
+    });
+
+    setJobs(updatedCompanyDetails.data.jobs);
+  }
+
   const message = () => {
     return (
       <div className="flex items-center justify-betwen">
@@ -310,7 +327,15 @@ function AddJobModal({
                 Save
               </button>
 
-              {isEdit && <button className="delete-button">Delete</button>}
+              {isEdit && <button
+                className="delete-button float-left m-[20px] py-[10px] "
+                onClick={() => {
+                  notify();
+                  setTimeout(() => {
+                    handleDeleteJobClick();
+                    setShowAddJobModal(false);
+                  }, 2000);
+                }} >Delete</button>}
             </div>
             <Toaster />
           </div>
