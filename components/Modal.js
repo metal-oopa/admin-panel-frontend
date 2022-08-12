@@ -2,13 +2,40 @@ import { GrClose } from "react-icons/gr";
 import { useRef, useState } from "react";
 import { AiOutlinePlus } from "react-icons/ai";
 import axios from "axios";
+import toast, { Toaster } from "react-hot-toast";
+import { AiFillCheckCircle } from "react-icons/ai";
+import Router from "next/router";
 
 function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
+  const message = () => {
+    return (
+      <div className="flex items-center justify-betwen">
+        <div className="text-white">
+          <AiFillCheckCircle />
+        </div>
+        <div className=" ml-2 font-inter text-white text-[14px] ">
+          Details saved successfully!
+        </div>
+      </div>
+    );
+  };
+
+  const notify = () =>
+    toast(message, {
+      position: "bottom-center",
+      style: {
+        width: "fit-content",
+        borderRadius: "9999px",
+        fontFamily: "Inter",
+        backgroundColor: "black",
+      },
+    });
+
   const fileRef = useRef(null);
 
   const [companyName, setCompanyName] = useState("");
   const [linkedIn, setLinkedIn] = useState("");
-  const [companyLogo, setCompanyLogo] = useState(null);
+  const [companyLogo, setCompanyLogo] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,21 +51,17 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
         title: companyName,
         linkedin: linkedIn,
         image: companyLogo,
-        subtitle: "",
-        description: "",
-        jobs: [],
-        locations: [],
-        tags: [],
-        keyPeople: [],
-        numberOfAssignments: "",
-        numberOfOpenings: "",
-        teamSize: [],
-        facebook: "",
-        instagram: "",
       },
       // withCredentials: true,
       url: "https://admin-panel-backend.vercel.app/create-company",
     });
+
+    if (response.status === 201) {
+      Router.push(
+        "/dashboard/companies/[id]",
+        `/dashboard/companies/${response.data._id}`
+      );
+    }
 
     setCompanyList((companyList) => [...companyList, response.data]);
     setCompanyName("");
@@ -60,8 +83,16 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
   const removeImage = () => {
     setCompanyLogo(null);
   };
+
+  const handleClose = (e) => {
+    if (e.target.id === "container") {
+      setModalOpen(false);
+    }
+  };
   return (
     <div
+      id="container"
+      onClick={handleClose}
       className={`${
         !modalOpen ? "hidden" : "fixed"
       } top-0 left-0 z-50 overflow-auto bg-smoke-light flex w-[100vw] h-[100vh]`}
@@ -112,9 +143,6 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
                 />
               </div>
               <div className="flex w-full h-1/4">
-                <span className="text-[12px] bg-gray-200 rounded-tl-[3.5px] rounded-bl-[3.5px] flex items-center justify-center px-2 text-gray-500 border">
-                  https://
-                </span>
                 <input
                   type="text"
                   value={linkedIn}
@@ -127,12 +155,21 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
           </div>
           <input type="file" ref={fileRef} hidden onChange={handleFileChange} />
           <div className="float-right ml-[0.75rem] mt-[1.5rem]">
-            <button className="ml-[0.9375rem]  outline-none  min-w-[9.0625rem] py-[0.625rem] px-[0.75rem] rounded-[0.3125rem]  font-semibold text-[0.875rem] h-[2.5rem] cursor-pointer text-white bg-[#1a73e8] mb-[20px]  border-none mt-[10px] flex items-center justify-center">
+            <button
+              onClick={() => {
+                notify();
+                setTimeout(() => {
+                  setModalOpen(false);
+                }, 2000);
+              }}
+              className="ml-[0.9375rem]  outline-none  min-w-[9.0625rem] py-[0.625rem] px-[0.75rem] rounded-[0.3125rem]  font-semibold text-[0.875rem] h-[2.5rem] cursor-pointer text-white bg-[#1a73e8] mb-[20px]  border-none mt-[10px] flex items-center justify-center"
+            >
               Save
             </button>
           </div>
         </form>
       </div>
+      <Toaster position="bottom-center" />
     </div>
   );
 }

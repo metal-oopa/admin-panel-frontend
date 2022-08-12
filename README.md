@@ -1,7 +1,8 @@
 # Frontend of the admin panel built with NextJs, MongoDB, ExpressJS, NodeJS
 
-#### Backend Code: ```https://github.com/metal-oopa/admin-panel-backend```
-#### Live Website: ```https://hirable-frontend.herokuapp.com/dashboard/companies```
+#### Backend Code: `https://github.com/metal-oopa/admin-panel-backend`
+
+#### Live Website: `https://hirable-frontend.herokuapp.com/dashboard/companies`
 
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
@@ -37,3 +38,16 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+
+# Changes made by Devraj:
+
+1. Added Funding Input Field
+2. Deleted Number of openings
+3. Added company Tagline Input
+4. Added Featured backend
+5. Added Delete Button
+6. Added Toast to every Save Button
+7. Added On Close condition for every Modal
+8. Removed Responsibility text editor from Add Jobs Modal
+
+- For adding input fields, I have just created states and not touched any backend code or useEffect snippets.

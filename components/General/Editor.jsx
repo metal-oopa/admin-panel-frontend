@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { Map } from "immutable";
 import {
   Editor,
   EditorState,
   RichUtils,
   convertFromHTML,
   ContentState,
-} from 'draft-js';
-import 'draft-js/dist/Draft.css';
-import { stateFromHTML } from 'draft-js-import-html';
-import { stateToHTML } from 'draft-js-export-html';
+} from "draft-js";
+import "draft-js/dist/Draft.css";
+import { stateFromHTML } from "draft-js-import-html";
+import { stateToHTML } from "draft-js-export-html";
 
 const RichEditor = ({
   htmlContent,
@@ -21,18 +22,22 @@ const RichEditor = ({
   curItem,
   purpose,
 }) => {
-
-  const [contentLength, setContentLength] = useState(0);
+  // const [contentLength, setContentLength] = useState(0);
   const [editorState, setEditorState] = useState(() =>
     EditorState.createEmpty()
   );
-  const [lenExceeded, setLenExceeded] = useState(false);
+  // const [lenExceeded, setLenExceeded] = useState(false);
 
   useEffect(() => {
     // console.log("hi");
-    if (companyDetails) {
+    if (companyDetails && purpose === "companyDescription") {
       setEditorState(() =>
         EditorState.createWithContent(stateFromHTML(companyDetails.description))
+      );
+    }
+    if (companyDetails && purpose === "aboutCompany") {
+      setEditorState(() =>
+        EditorState.createWithContent(stateFromHTML(companyDetails.about))
       );
     }
     if (curItem && purpose === "jobDescription") {
@@ -45,42 +50,41 @@ const RichEditor = ({
         EditorState.createWithContent(stateFromHTML(curItem.responsibilities))
       );
     }
-
   }, [companyDetails]);
 
   useEffect(() => {
     handleEditorChange(stateToHTML(editorState.getCurrentContent()));
   }, [editorState]);
 
-  useEffect(() => {
-    const len = editorState.getCurrentContent().getPlainText().length;
-    setContentLength(len);
-    if (setLenExceeded)
-      if (len > 500) setLenExceeded(true);
-      else setLenExceeded(false);
-  }, [editorState]);
+  // useEffect(() => {
+  //   const len = editorState.getCurrentContent().getPlainText().length;
+  //   setContentLength(len);
+  //   if (setLenExceeded)
+  //     if (len > 500) setLenExceeded(true);
+  //     else setLenExceeded(false);
+  // }, [editorState]);
 
   const onEditorChange = (editorchange) => {
     setEditorState(editorchange);
-    setContentLength(editorState.length);
+    // setContentLength(editorState.length);
   };
 
   const _onBoldClick = () => {
-    onEditorChange(RichUtils.toggleInlineStyle(editorState, 'BOLD'));
+    onEditorChange(RichUtils.toggleInlineStyle(editorState, "BOLD"));
   };
   const _onItalicClick = () => {
-    onEditorChange(RichUtils.toggleInlineStyle(editorState, 'ITALIC'));
+    onEditorChange(RichUtils.toggleInlineStyle(editorState, "ITALIC"));
   };
   const _onUnderlineClick = () => {
-    onEditorChange(RichUtils.toggleInlineStyle(editorState, 'UNDERLINE'));
+    onEditorChange(RichUtils.toggleInlineStyle(editorState, "UNDERLINE"));
   };
   const _onUnorderedClick = () => {
     onEditorChange(
-      RichUtils.toggleBlockType(editorState, 'unordered-list-item')
+      RichUtils.toggleBlockType(editorState, "unordered-list-item")
     );
   };
   const _onOrderedClick = () => {
-    onEditorChange(RichUtils.toggleBlockType(editorState, 'ordered-list-item'));
+    onEditorChange(RichUtils.toggleBlockType(editorState, "ordered-list-item"));
   };
 
   const handleKeyCommand = (command, editorState) => {
@@ -88,38 +92,33 @@ const RichEditor = ({
 
     if (newState) {
       setEditorState(newState);
-      return 'handled';
+      return "handled";
     }
-    return 'not-handled';
+    return "not-handled";
   };
 
-  const handlePastedText = (_text, html, editorState) => {
-  };
+  // const handlePastedText = (_text, html, editorState) => {};
+  const customRenderMap = Map({
+    unstyled: {
+      element: "div",
+      // will be used in convertFromHTMLtoContentBlocks
+      aliasedElements: ["p"],
+    },
+  });
 
   const onContentChange = (editorState) => {
     const contentState = editorState.getCurrentContent();
     const newState = EditorState.createWithContent(contentState);
-    if (contentState.getPlainText().length > 500) {
-      setLenExceeded(true);
-    }
-  }
+    // if (contentState.getPlainText().length > 500) {
+    //   setLenExceeded(true);
+    // }
+  };
 
   return (
-    <div>
-      <div className="rounded-md border-[1.5px] border-[#d6e0e1]">
-        <div style={{ borderBottom: "1px solid grey" }} className='h-[10rem] p-[5px]'>
-          <Editor
-            editorState={editorState}
-            onChange={(editorState) => onEditorChange(editorState)}
-            handleKeyCommand={handleKeyCommand}
-            handlePastedText={handlePastedText}
-            placeholder="Give a brief description"
-            className="focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in"
-          />
-        </div>
+    <div className="">
+      <div className="rounded-t-md border-[1px] border-gray-400">
         <div className="w-full bg-[#ededed] border-1 border-[#d6e0e1] py-[0.25rem] px-[0.725rem] pb-0 border-t-0 flex items-center z-50">
-
-          <div onClick={_onBoldClick} >
+          <div onClick={_onBoldClick}>
             <svg
               className="MuiSvgIcon-root"
               focusable="false"
@@ -188,7 +187,18 @@ const RichEditor = ({
           </div>
         </div>
       </div>
-      <div className="mt-1 font-semibold">
+      <div className="min-h-[10rem] max-h-[10rem] overflow-auto text-sm p-[5px] rounded-b-md mb-5 border-b-[1px] border-x-[1px] border-gray-400">
+        <Editor
+          editorState={editorState}
+          onChange={(editorState) => onEditorChange(editorState)}
+          handleKeyCommand={handleKeyCommand}
+          // handlePastedText={this.handlePastedText}
+          blockRenderMap={customRenderMap}
+          placeholder="Give a brief description"
+          className="focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in"
+        />
+      </div>
+      {/* <div className="mt-1 font-semibold">
         {lenExceeded ? (
           <p className="text-sm" style={{ color: 'red' }}>
             Exceeded maximum limit {contentLength}/500
@@ -198,7 +208,7 @@ const RichEditor = ({
             {contentLength}/500
           </p>
         )}
-      </div>
+      </div> */}
     </div>
   );
 };
