@@ -21,8 +21,11 @@ function Profile({ id, companyDetails }) {
   const [aboutCompany, setAboutCompany] = useState("");
   const [companyFunding, setCompanyFunding] = useState("");
   const [companyDescription, setCompanyDescription] = useState("");
-  const handleEditorChange = (htmlContent) => {
+  const handleDescriptionEditorChange = (htmlContent) => {
     setCompanyDescription(htmlContent);
+  };
+  const handleAboutEditorChange = (htmlContent) => {
+    setAboutCompany(htmlContent);
   };
 
   useEffect(() => {
@@ -214,27 +217,19 @@ function Profile({ id, companyDetails }) {
         />
       </div>
 
-      {/* <div className="px-10 w-full space-y-2">
+      <div className="px-10 w-full space-y-1 mt-4">
         <p className="text-[12px] font-semibold text-[#201e27]">
-          About Company (in Jobs)
+          About Company
         </p>
-         <textarea
-          type="text"
-          value={aboutCompany}
-          onChange={(e) => setAboutCompany(e.target.value)}
-          placeholder="Give a brief description"
-          className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-base border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent h-52"
-        /> 
         <RichEditor
           htmlContent={aboutCompany}
           setAboutCompany={setAboutCompany}
-          handleEditorChange={handleEditorChange}
-          purpose="aboutCompany"
+          handleEditorChange={handleAboutEditorChange}
           id={id}
+          purpose="aboutCompany"
           companyDetails={companyDetails}
         />
-      </div> 
-      */}
+      </div>
 
       <div className="px-10 w-full space-y-2">
         <p className="text-[12px] font-semibold text-[#201e27]">
@@ -250,7 +245,7 @@ function Profile({ id, companyDetails }) {
         <RichEditor
           htmlContent={companyDescription}
           setAboutCompany={setCompanyDescription}
-          handleEditorChange={handleEditorChange}
+          handleEditorChange={handleDescriptionEditorChange}
           id={id}
           purpose="companyDescription"
           companyDetails={companyDetails}

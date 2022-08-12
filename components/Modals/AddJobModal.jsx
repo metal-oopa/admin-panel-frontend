@@ -165,8 +165,6 @@ function AddJobModal({
   const handleDeleteJobClick = async () => {
     companyDetails.jobs.splice(index, 1);
 
-    console.log(companyDetails.jobs);
-
     const updatedCompanyDetails = await axios({
       method: "put",
       data: companyDetails,

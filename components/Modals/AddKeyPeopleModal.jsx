@@ -7,6 +7,7 @@ function AddKeyPeopleModal({
     showAddKeyPeopleModal,
     setShowAddKeyPeopleModal,
     curItem,
+    setCurItem,
     isEdit,
     people,
     setPeople,
@@ -22,9 +23,14 @@ function AddKeyPeopleModal({
 
     // load company details
     useEffect(() => {
-        if (companyDetails) {
+        if (curItem) {
+            setName(curItem.name);
+            setRole(curItem.role);
+            setEmail(curItem.email);
+            setAlternateEmail(curItem.alternateEmail);
+            setLinkedin(curItem.linkedin);
         }
-    }, [companyDetails]);
+    }, [companyDetails, curItem, isEdit]);
 
     const handleSaveJobClick = async () => {
 
@@ -83,7 +89,7 @@ function AddKeyPeopleModal({
             companyDetails.keyPeople.push(data);
 
             const response = await axios({
-                method: "POST",
+                method: "PUT",
                 url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
                 data: companyDetails,
             });
@@ -104,6 +110,26 @@ function AddKeyPeopleModal({
             setShowAddKeyPeopleModal(false);
         }
     };
+
+    const handleDeleteJobClick = async () => {
+
+        companyDetails.keyPeople.splice(index, 1);
+
+        const response = await axios({
+            method: "PUT",
+            url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
+            data: companyDetails,
+        });
+
+        if (response.status === 200) {
+            notify(message)
+            setPeople(companyDetails.keyPeople);
+            setShowAddKeyPeopleModal(false);
+        }
+        else {
+            notify("Something went wrong");
+        }
+    }
 
     const message = () => {
         return (
@@ -167,9 +193,9 @@ function AddKeyPeopleModal({
                                     </p>
                                     <input
                                         type="text"
-                                        // defaultValue={curItem.title}
+                                        defaultValue={curItem.name}
                                         onChange={(e) => setName(e.target.value)}
-                                        placeholder="Job Title"
+                                        placeholder="John Smith"
                                         className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
                                     />
                                 </div>
@@ -179,9 +205,9 @@ function AddKeyPeopleModal({
                                     </p>
                                     <input
                                         type="text"
-                                        // defaultValue={curItem.title}
+                                        defaultValue={curItem.role}
                                         onChange={(e) => setRole(e.target.value)}
-                                        placeholder="Job Title"
+                                        placeholder="HR Manager"
                                         className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
                                     />
                                 </div>
@@ -191,7 +217,7 @@ function AddKeyPeopleModal({
                                     </p>
                                     <input
                                         type="text"
-                                        // defaultValue={curItem.title}
+                                        defaultValue={curItem.email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         placeholder="example@company.me"
                                         className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
@@ -203,9 +229,9 @@ function AddKeyPeopleModal({
                                     </p>
                                     <input
                                         type="text"
-                                        // defaultValue={curItem.title}
+                                        defaultValue={curItem.alternateEmail}
                                         onChange={(e) => setAlternateEmail(e.target.value)}
-                                        placeholder="expample@expample.com"
+                                        placeholder="example@example.com"
                                         className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
                                     />
                                 </div>
@@ -216,7 +242,7 @@ function AddKeyPeopleModal({
                                     </p>
                                     <input
                                         type="text"
-                                        // defaultValue={curItem.title}
+                                        defaultValue={curItem.linkedin}
                                         onChange={(e) => setLinkedin(e.target.value)}
                                         placeholder="https://www.linkedin.com/..."
                                         className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
@@ -232,12 +258,18 @@ function AddKeyPeopleModal({
                             >
                                 Save
                             </button>
+                            {isEdit && <button
+                                className="delete-button float-left m-[20px] py-[10px]"
+                                onClick={() => {
+                                    handleDeleteJobClick();
+                                }} >Delete</button>}
                         </div>
                         <Toaster />
                     </div>
                 </>
-            ) : null}
-        </div>
+            ) : null
+            }
+        </div >
     );
 }
 

@@ -43,20 +43,6 @@ function Jobs({ id, companyDetails }) {
 
   return (
     <div className="jobs">
-      <div className="px-10 w-full space-y-1 mt-4">
-        <p className="text-[12px] font-semibold text-[#201e27]">
-          About Company
-        </p>
-        <RichEditor
-          htmlContent={aboutCompany}
-          setAboutCompany={setAboutCompany}
-          handleEditorChange={handleEditorChange}
-          id={id}
-          purpose="aboutCompany"
-          companyDetails={companyDetails}
-        />
-      </div>
-
       <div className="px-20 ">
         <button
           className="save-button float-right m-[20px] "

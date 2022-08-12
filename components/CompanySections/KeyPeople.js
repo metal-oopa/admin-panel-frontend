@@ -3,42 +3,40 @@ import AddJobModal from "../Modals/AddJobModal";
 import AddKeyPeopleModal from "../Modals/AddKeyPeopleModal";
 
 function KeyPeople({ id, companyDetails }) {
-  const [showAddJobModal, setShowAddJobModal] = useState(false);
-  const [jobs, setJobs] = useState([]);
-  const [curItem, setCurItem] = useState({});
   const [isEdit, setIsEdit] = useState(false);
   const [index, setIndex] = useState();
+  const [showAddKeyPeopleModal, setShowAddKeyPeopleModal] = useState(false);
+  const [keyPeople, setKeyPeople] = useState([]);
+  const [curKeyPerson, setCurKeyPerson] = useState({});
 
   useEffect(() => {
     if (
       companyDetails &&
-      companyDetails.jobs &&
-      companyDetails.jobs.length > 0
+      companyDetails.keyPeople &&
+      companyDetails.keyPeople.length > 0
     ) {
-      setJobs(companyDetails.jobs);
-      setIndex(companyDetails.jobs.length);
-      // console.log(companyDetails.jobs);
+      setKeyPeople(companyDetails.keyPeople);
+      setIndex(companyDetails.keyPeople.length);
     }
   }, [companyDetails]);
 
-  const handleJobClick = (job, index) => {
-    setCurItem(job);
+  const handleJobClick = (keyPerson, index) => {
+    setCurKeyPerson(keyPerson);
     setIsEdit(true);
     setIndex(index);
-    setShowAddJobModal(true);
-    setIsEdit(true);
+    setShowAddKeyPeopleModal(true);
   };
 
   const handleSaveJobClick = () => {
-    console.log(curItem);
-    setCurItem({
-      title: "",
-      jobType: "",
-      description: "",
-      responsibilities: "",
+    setCurKeyPerson({
+      name: "",
+      role: "",
+      email: "",
+      alternateEmail: "",
+      linkedin: "",
     });
     setIsEdit(false);
-    setShowAddJobModal(true);
+    setShowAddKeyPeopleModal(true);
   };
 
   return (
@@ -47,28 +45,29 @@ function KeyPeople({ id, companyDetails }) {
         className="save-button float-right m-[20px] "
         onClick={handleSaveJobClick}
       >
-        Add Job
+        Add Person
       </button>
-      <AddJobModal
-        showAddJobModal={showAddJobModal}
-        setShowAddJobModal={setShowAddJobModal}
-        jobs={jobs}
-        setJobs={setJobs}
-        curItem={curItem}
+      <AddKeyPeopleModal
+        showAddKeyPeopleModal={showAddKeyPeopleModal}
+        setShowAddKeyPeopleModal={setShowAddKeyPeopleModal}
+        people={keyPeople}
+        setPeople={setKeyPeople}
+        curItem={curKeyPerson}
+        setCurItem={setCurKeyPerson}
         isEdit={isEdit}
         index={index}
         companyDetails={companyDetails}
       />
 
       <div className="w-[80%] flex flex-row-rev flex-wrap ">
-        {jobs.map((job, index) => {
+        {keyPeople.map((person, index) => {
           return (
             <div
-              key={index}
+              key={person._id}
               className="cursor-pointer m-[15px]"
-              onClick={() => handleJobClick(job, index)}
+              onClick={() => handleJobClick(person, index)}
             >
-              <h1>{job.title}</h1>
+              <h1>{person.name}</h1>
             </div>
           );
         })}
