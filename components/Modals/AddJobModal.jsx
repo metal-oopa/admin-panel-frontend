@@ -21,7 +21,6 @@ function AddJobModal({
     { name: "Fulltime", selected: false },
     { name: "Internship", selected: false },
   ]);
-  const [jobname, setJobName] = useState("");
   const [autocomplete, setAutocomplete] = useState({
     disabled: true,
     data: [],
@@ -65,7 +64,7 @@ function AddJobModal({
   const updatejobType = (roleName) => {
     const newData = jobType.map((role) => {
       if (role.name === roleName) role.selected = !role.selected;
-      if (role.selected === true) setJobName(role.name);
+      if (role.selected === true) setjobType(role.name);
 
       return role;
     });
@@ -84,7 +83,7 @@ function AddJobModal({
       companyDetails.jobs.map((job, index) => {
         if (job._id === curItem._id) {
           job.title = jobTitle === "" ? curItem.title : jobTitle;
-          job.jobType = jobname === "" ? curItem.jobType : jobname;
+          job.jobType = jobType === "" ? curItem.jobType : jobType;
           job.description = description;
           job.featured = featured;
         }
@@ -107,14 +106,12 @@ function AddJobModal({
     // add job
     const newJob = {
       title: jobTitle,
-      jobType: jobname,
+      jobType: jobType,
       description: description,
-      responsibilities: responsibilities,
       featured: featured
     };
 
-    companyDetails.jobs =
-      companyDetails.jobs === undefined ? [] : companyDetails.jobs;
+    companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
     companyDetails.jobs.push(newJob);
 
     // add axios call to update company details
