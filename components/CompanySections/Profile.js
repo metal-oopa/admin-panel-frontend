@@ -70,7 +70,7 @@ function Profile({ id, companyDetails }) {
       method: "put",
       data: newData,
       // withCredentials: true,
-      url: `https://admin-panel-backend.vercel.app/update-company/?_id=${id}`,
+      url: `https://hirable-backend-original.vercel.app/update-company/?_id=${id}`,
     });
 
     console.log(newData);

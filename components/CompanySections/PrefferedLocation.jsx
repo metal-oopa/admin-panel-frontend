@@ -36,7 +36,7 @@ function PrefferedLocation({ setLocation, id, companyDetails }) {
   //   await axios({
   //     method: "get",
   //     // withCredentials: true,
-  //     url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
+  //     url: `https://hirable-backend-original.vercel.app/get-companies/?_id=${id}`,
   //   }).then((data) => {
   //     if (data.data.locations.length > 0) {
   //       setPreferredLocation(data.data.locations);

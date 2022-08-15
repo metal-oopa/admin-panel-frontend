@@ -64,7 +64,7 @@ function AddKeyPeopleModal({
 
             const response = await axios({
                 method: "PUT",
-                url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
+                url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
                 data: companyDetails,
             });
 
@@ -90,7 +90,7 @@ function AddKeyPeopleModal({
 
             const response = await axios({
                 method: "PUT",
-                url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
+                url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
                 data: companyDetails,
             });
 
@@ -117,7 +117,7 @@ function AddKeyPeopleModal({
 
         const response = await axios({
             method: "PUT",
-            url: `https://admin-panel-backend.vercel.app/update-company/?_id=${companyDetails._id}`,
+            url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
             data: companyDetails,
         });
 

@@ -21,7 +21,7 @@ function Company() {
       await axios({
         method: "get",
         // withCredentials: true,
-        url: `https://admin-panel-backend.vercel.app/get-company/?_id=${id}`,
+        url: `https://hirable-backend-original.vercel.app/get-company/?_id=${id}`,
       }).then((data) => {
         console.log(data.data);
         setCompanyDetails(data.data);

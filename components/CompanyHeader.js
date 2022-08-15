@@ -43,7 +43,7 @@ function CompanyHeader({ id, companyDetails }) {
   //     await axios({
   //       method: "get",
   //       // withCredentials: true,
-  //       url: `https://admin-panel-backend.vercel.app/get-companies/?_id=${id}`,
+  //       url: `https://hirable-backend-original.vercel.app/get-companies/?_id=${id}`,
   //     }).then((data) => {
   //       setCompanyDetails(data.data);
   //       setCompanyName(data.data.title);
@@ -93,7 +93,7 @@ function CompanyHeader({ id, companyDetails }) {
         image: companyDetails.image,
       },
       // withCredentials: true,
-      url: `https://admin-panel-backend.vercel.app/update-company/?_id=${id}`,
+      url: `https://hirable-backend-original.vercel.app/update-company/?_id=${id}`,
     });
 
     // setCompanyList((companyList) => [...companyList, company]);
@@ -109,7 +109,7 @@ function CompanyHeader({ id, companyDetails }) {
     await axios({
       method: "delete",
       // withCredentials: true,
-      url: `https://admin-panel-backend.vercel.app/delete-company/${id}`,
+      url: `https://hirable-backend-original.vercel.app/delete-company/${id}`,
     });
 
     Router.push("/dashboard/companies");

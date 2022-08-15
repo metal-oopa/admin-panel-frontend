@@ -53,7 +53,7 @@ function Modal({ modalOpen, companyList, setCompanyList, setModalOpen }) {
         image: companyLogo,
       },
       // withCredentials: true,
-      url: "https://admin-panel-backend.vercel.app/create-company",
+      url: "https://hirable-backend-original.vercel.app/create-company",
     });
 
     if (response.status === 201) {
