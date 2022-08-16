@@ -17,7 +17,6 @@ function Jobs({ id, companyDetails }) {
     if (companyDetails)
       if (companyDetails.jobs && companyDetails.jobs.length > 0) {
         setJobs(companyDetails.jobs);
-        setIndex(companyDetails.jobs.length);
       }
     setAboutCompany(companyDetails.about);
   }, [companyDetails]);

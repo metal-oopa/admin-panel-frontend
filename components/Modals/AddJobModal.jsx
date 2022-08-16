@@ -29,18 +29,21 @@ function AddJobModal({
   const handleDescriptionChange = (htmlContent) => {
     setDescription(htmlContent);
   };
-  // const [responsibilities, setResponsibilities] = useState("");
-  // const handleResponsibilityChange = (htmlContent) => {
-  //   setResponsibilities(htmlContent);
-  // };
   const [inputValue, setInputValue] = useState("");
 
   // load company details
   useEffect(() => {
-    if (companyDetails) {
+    if (curItem) {
+      setJobTitle(curItem.jobTitle);
+      setFeatured(curItem.featured);
+      setDescription(curItem.description);
 
+      setjobType(
+        curItem.jobType?.map((type) => {
+          return { name: type.name, selected: type.selected };
+        }))
     }
-  }, [companyDetails]);
+  }, [companyDetails, curItem]);
 
   const handleInputValueChange = (e) => {
     setInputValue(e.target.value);
@@ -50,8 +53,8 @@ function AddJobModal({
       const autocompleteData = [];
       const regex = new RegExp(e.target.value, "i");
 
-      jobType.forEach((role) => {
-        if (regex.test(role.name)) autocompleteData.push(role.name);
+      jobType.forEach((job) => {
+        if (regex.test(job.name)) autocompleteData.push(job.name);
       });
 
       setAutocomplete({
@@ -61,13 +64,14 @@ function AddJobModal({
     }
   };
 
-  const updatejobType = (roleName) => {
-    const newData = jobType.map((role) => {
-      if (role.name === roleName) role.selected = !role.selected;
-      if (role.selected === true) setjobType(role.name);
+  const updatejobType = (jobName) => {
+    const newData = jobType.map((job) => {
+      if (job.name === jobName) job.selected = !job.selected;
+      if (job.selected === true) setjobType(job.name);
 
-      return role;
+      return job;
     });
+
     setInputValue("");
     setAutocomplete({
       disabled: true,
@@ -145,9 +149,9 @@ function AddJobModal({
     // setShowAddJobModal(0);
     // setJobTitle('');
 
-    // jobType.map((role) => {
-    //   role.selected = false;
-    //   return role;
+    // jobType.map((job) => {
+    //   job.selected = false;
+    //   return job;
     // })
 
     // setDescription('');
@@ -285,18 +289,18 @@ function AddJobModal({
                   </div>
 
                   <div className="w-full ml-[-10px]">
-                    {jobType.map((role, index) => {
+                    {jobType?.map((job, index) => {
                       return (
                         <span
                           key={index}
                           className="preferred_roles"
                           style={{
-                            background: role.selected ? "#61a0ff" : "",
-                            color: role.selected ? "#fff" : "",
+                            background: job.selected ? "#61a0ff" : "",
+                            color: job.selected ? "#fff" : "",
                           }}
-                          onClick={() => updatejobType(role.name)}
+                          onClick={() => updatejobType(job.name)}
                         >
-                          {role.name}
+                          {job.name}
                         </span>
                       );
                     })}
