@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from "react";
 import AddJobModal from "../Modals/AddJobModal";
 import RichEditor from "../General/Editor";
+import axios from "axios";
 
-function Jobs({ id, companyDetails }) {
+function Jobs({ id, companyDetails, companyJobs, setCompanyJobs }) {
   const [showAddJobModal, setShowAddJobModal] = useState(false);
   const [jobs, setJobs] = useState([]);
   const [curItem, setCurItem] = useState({});
@@ -13,15 +14,12 @@ function Jobs({ id, companyDetails }) {
     setAboutCompany(htmlContent);
   };
 
-  useEffect(() => {
-    if (companyDetails) {
-      if (companyDetails.jobs && companyDetails.jobs.length > 0) {
-        setJobs(companyDetails.jobs);
-      }
-
-      if (companyDetails.about) setAboutCompany(companyDetails.about);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(async () => {
+    if (companyJobs) {
+      setJobs(companyJobs);
     }
-  }, [companyDetails]);
+  }, [companyDetails, companyJobs, jobs]);
 
   const handleJobClick = (job, index) => {
     setCurItem(job);
@@ -32,7 +30,7 @@ function Jobs({ id, companyDetails }) {
 
   const handleSaveJobClick = () => {
     setCurItem({
-      title: "",
+      jobtitle: "",
       jobType: "",
       description: "",
       responsibilities: "",
@@ -71,7 +69,7 @@ function Jobs({ id, companyDetails }) {
                 className="cursor-pointer m-[15px]"
                 onClick={() => handleJobClick(job, index)}
               >
-                <h1>{job.title}</h1>
+                <h1>{job.jobtitle}</h1>
               </div>
             );
           })}

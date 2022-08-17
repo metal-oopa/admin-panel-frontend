@@ -14,18 +14,39 @@ function Company() {
 
   const [currentSection, setCurrentSection] = useState("Profile");
   const [companyDetails, setCompanyDetails] = useState();
+  const [jobs, setJobs] = useState([]);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(async () => {
     if (router.isReady) {
-      // console.log(id);
       await axios({
         method: "get",
         // withCredentials: true,
         url: `https://hirable-backend-original.vercel.app/get-company/?_id=${id}`,
-      }).then((data) => {
-        console.log(data.data);
-        setCompanyDetails(data.data);
-      });
+      })
+        .then((data) => {
+          console.log(data.data);
+          setCompanyDetails(data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+
+      await axios({
+        method: "get",
+        // withCredentials: true,
+        url: `http://localhost:3001/get-jobs/?companyId=${id}`,
+        data: {
+          companyId: id,
+        },
+      })
+        .then((data) => {
+          console.log(data.data);
+          setJobs(data.data);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, [router.isReady, id]);
 
@@ -66,7 +87,12 @@ function Company() {
           {currentSection === "Profile" ? (
             <Profile id={id} companyDetails={companyDetails} />
           ) : currentSection === "Jobs" ? (
-            <Jobs id={id} companyDetails={companyDetails} />
+            <Jobs
+              id={id}
+              companyDetails={companyDetails}
+              companyJobs={jobs}
+              setCompanyJobs={setJobs}
+            />
           ) : (
             <KeyPeople id={id} companyDetails={companyDetails} />
           )}

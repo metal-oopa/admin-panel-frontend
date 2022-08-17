@@ -4,6 +4,7 @@ import RichEditor from "../General/Editor";
 import toast, { Toaster } from "react-hot-toast";
 import axios from "axios";
 import { AiFillCheckCircle } from "react-icons/ai";
+import Router from "next/router";
 
 function AddJobModal({
   showAddJobModal,
@@ -17,7 +18,7 @@ function AddJobModal({
   index,
   companyDetails,
 }) {
-  const [jobTitle, setJobTitle] = useState("");
+  const [jobtitle, setjobtitle] = useState("");
   const [featured, setFeatured] = useState(false);
   const [jobType, setjobType] = useState([
     { name: "Fulltime", selected: false },
@@ -36,12 +37,12 @@ function AddJobModal({
   // load company details
   useEffect(() => {
     if (curItem) {
-      setJobTitle(curItem.title);
+      setjobtitle(curItem.jobtitle);
       setFeatured(curItem.featured);
       setDescription(curItem.description);
 
-      if (curItem.jobType && curItem.jobType.length > 0) {
-        setjobType(curItem.jobType);
+      if (curItem.type?.length > 0) {
+        setjobType(curItem.type);
       }
     }
   }, [companyDetails, curItem]);
@@ -88,57 +89,63 @@ function AddJobModal({
     if (!curItem || !isEdit) {
 
       const newJob = {
-        title: jobTitle,
-        jobType: jobType,
+        jobtitle: jobtitle,
+        type: jobType,
         description: description,
-        featured: featured
+        featured: featured,
+        companyId: companyDetails._id,
       };
 
-      companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
-      companyDetails.jobs.push(newJob);
+      jobs = jobs === undefined ? [] : jobs;
+      jobs.push(newJob);
+      setJobs(jobs);
 
-      console.log(companyDetails.jobs);
       // add axios call to update company details
       const updatedCompanyDetails = await axios({
-        method: "put",
-        data: companyDetails,
+        method: "POST",
+        data: newJob,
         // withCredentials: true,
-        url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
+        url: `http://localhost:3001/create-job`,
       });
 
-      setJobs(updatedCompanyDetails.data.jobs);
       setShowAddJobModal(0);
       setCurItem(null);
       setIsEdit(false);
 
     } else {
 
-      companyDetails.jobs.map((job, index) => {
+      // if curItem is not null, then update job
+      const updatedJob = {
+        jobtitle: jobtitle,
+        type: jobType,
+        description: description,
+        featured: featured,
+        companyId: companyDetails._id,
+        _id: curItem._id,
+      };
+
+      jobs.map((job, index) => {
         if (job._id === curItem._id) {
-          job.title = jobTitle;
-          job.jobType = jobType;
+          job.jobtitle = jobtitle;
+          job.type = jobType;
           job.description = description;
           job.featured = featured;
+          job.companyId = companyDetails._id;
         }
         return job;
       });
+      setJobs(jobs);
+      setIsEdit(false);
+      setCurItem(null);
+      setShowAddJobModal(0);
 
       // add axios call to update company details
-      const updatedCompanyDetails = await axios({
+      await axios({
         method: "PUT",
-        data: companyDetails,
+        data: updatedJob,
         // withCredentials: true,
-        url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
+        url: `http://localhost:3001/update-job`,
       });
-
-      // update jobs
-      if (updatedCompanyDetails.status === 200) {
-        setJobs(updatedCompanyDetails.data.jobs);
-        setShowAddJobModal(0);
-        setIsEdit(false);
-      }
-      setCurItem(null);
-
     }
 
   };
@@ -150,16 +157,19 @@ function AddJobModal({
 
   // * Working correctly
   const handleDeleteJobClick = async () => {
-    companyDetails.jobs.splice(index, 1);
+    jobs.splice(index, 1);
+    setJobs(jobs);
+    setCurItem(null);
+    setShowAddJobModal(0);
 
-    const updatedCompanyDetails = await axios({
-      method: "put",
-      data: companyDetails,
+    await axios({
+      method: "DELETE",
+      data: {
+        _id: curItem._id,
+      },
       // withCredentials: true,
-      url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
+      url: `http://localhost:3001/delete-job`,
     });
-
-    setJobs(updatedCompanyDetails.data.jobs);
   }
 
   const message = () => {
@@ -222,9 +232,9 @@ function AddJobModal({
                   </p>
                   <input
                     type="text"
-                    defaultValue={curItem.title}
-                    onChange={(e) => setJobTitle(e.target.value)}
-                    placeholder="Job Title"
+                    defaultValue={curItem.jobtitle}
+                    onChange={(e) => setjobtitle(e.target.value)}
+                    placeholder="Job jobtitle"
                     className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
                   />
                 </div>
@@ -301,10 +311,7 @@ function AddJobModal({
                 className="save-button float-right m-[20px] py-[10px] "
                 onClick={() => {
                   notify();
-                  setTimeout(() => {
-                    handleSaveJobClick();
-                    setShowAddJobModal(false);
-                  }, 2000);
+                  handleSaveJobClick();
                 }}
               >
                 Save
@@ -314,10 +321,7 @@ function AddJobModal({
                 className="delete-button float-left m-[20px] py-[10px] "
                 onClick={() => {
                   notify();
-                  setTimeout(() => {
-                    handleDeleteJobClick();
-                    setShowAddJobModal(false);
-                  }, 2000);
+                  handleDeleteJobClick();
                 }} >Delete</button>}
             </div>
             <Toaster />
@@ -335,7 +339,7 @@ export default AddJobModal;
 //       // update job
 //       companyDetails.jobs.map((job, index) => {
 //         if (job._id === curItem._id) {
-//           job.title = jobTitle;
+//           job.jobtitle = jobtitle;
 //           job.jobType = jobType;
 //           job.description = description;
 //           job.featured = featured;
@@ -359,7 +363,7 @@ export default AddJobModal;
 //     }
 //     // add job
 //     const newJob = {
-//       title: jobTitle,
+//       jobtitle: jobtitle,
 //       jobType: jobType,
 //       description: description,
 //       featured: featured

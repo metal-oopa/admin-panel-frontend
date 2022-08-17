@@ -15,8 +15,8 @@ function Profile({ id, companyDetails }) {
   const [website, setWebsite] = useState("");
   const [instagram, setInstagram] = useState("");
   const [openings, setOpenings] = useState("");
-  const [location, setLocation] = useState();
-  const [tags, setTags] = useState();
+  const [location, setLocation] = useState([]);
+  const [tags, setTags] = useState([]);
   const [teamSize, setTeamSize] = useState("");
   const [aboutCompany, setAboutCompany] = useState("");
   const [companyFunding, setCompanyFunding] = useState("");
@@ -41,6 +41,9 @@ function Profile({ id, companyDetails }) {
       setAboutCompany(companyDetails.about);
       setCompanyFunding(companyDetails.totalFunding);
       setCompanyDescription(companyDetails.description);
+
+      // push companyDetails.tags to tags array
+      // push companyDetails.locations to location array
     }
   }, [companyDetails]);
 
