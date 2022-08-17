@@ -12,6 +12,7 @@ function AddJobModal({
   setJobs,
   curItem,
   isEdit,
+  setIsEdit,
   index,
   companyDetails,
 }) {
@@ -38,10 +39,9 @@ function AddJobModal({
       setFeatured(curItem.featured);
       setDescription(curItem.description);
 
-      setjobType(
-        curItem.jobType?.map((type) => {
-          return { name: type.name, selected: type.selected };
-        }))
+      if (curItem.jobType && curItem.jobType.length > 0) {
+        setjobType(curItem.jobType);
+      }
     }
   }, [companyDetails, curItem]);
 
@@ -82,12 +82,12 @@ function AddJobModal({
   };
 
   const handleSaveJobClick = async () => {
-    if (curItem._id) {
+    if (curItem._id && isEdit) {
       // update job
       companyDetails.jobs.map((job, index) => {
         if (job._id === curItem._id) {
-          job.title = jobTitle === "" ? curItem.title : jobTitle;
-          job.jobType = jobType === "" ? curItem.jobType : jobType;
+          job.title = jobTitle;
+          job.jobType = jobType;
           job.description = description;
           job.featured = featured;
         }
@@ -96,7 +96,7 @@ function AddJobModal({
 
       // add axios call to update company details
       const updatedCompanyDetails = await axios({
-        method: "put",
+        method: "PUT",
         data: companyDetails,
         // withCredentials: true,
         url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
@@ -105,7 +105,8 @@ function AddJobModal({
       // update jobs
       setJobs(updatedCompanyDetails.data.jobs);
       setShowAddJobModal(0);
-      return;
+      setIsEdit(false);
+      return 0;
     }
     // add job
     const newJob = {
@@ -128,34 +129,7 @@ function AddJobModal({
 
     setJobs(updatedCompanyDetails.data.jobs);
     setShowAddJobModal(0);
-
-    // if (isEdit) {
-    //   if (newJob.title !== '') jobs[index].title = newJob.title;
-    //   if (newJob.jobType !== '') jobs[index].jobType = newJob.jobType;
-    //   if (newJob.description !== '') jobs[index].description = newJob.description;
-    //   if (newJob.responsibilities !== '') jobs[index].responsibilities = newJob.responsibilities;
-    // }
-    // else {
-    //   var type;
-
-    //   jobType.map((job) => {
-    //     if (job.selected === true) type = job.name;
-    //   })
-
-    //   jobs.unshift(newJob)
-
-    // }
-
-    // setShowAddJobModal(0);
-    // setJobTitle('');
-
-    // jobType.map((job) => {
-    //   job.selected = false;
-    //   return job;
-    // })
-
-    // setDescription('');
-    // setResponsibilities('');
+    setIsEdit(false);
   };
   const handleClose = (e) => {
     if (e.target.id === "container") {
@@ -260,14 +234,6 @@ function AddJobModal({
                   <p className="text-[15px] font-semibold text-[#201e27]">
                     Type
                   </p>
-                  {/* <input
-                    type="text"
-                    defaultValue={curItem.jobType}
-                    // value={inputValue}
-                    onChange={handleInputValueChange}
-                    placeholder="Fulltime , Internship"
-                    className="appearance-none px-3 py-2 placeholder-[#6B7280] text-[#030303]  placeholder-opacity-90 relative w-full bg-white rounded text-sm border-[1.5px]  focus:outline-none focus:border-[#2dc5a1] focus:border-2 transition duration-200  ease-in mt-1 bg-transparent"
-                  /> */}
 
                   <div
                     className={`${autocomplete.disabled ? "hidden" : ""
@@ -306,24 +272,12 @@ function AddJobModal({
                     })}
                   </div>
                 </div>
-
-
-
-                {/* <div className='mt-[25px]'>
-                  <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">Description</p>
-                  <RichEditor
-                    htmlContent={curItem.description}
-                    handleEditorChange={handleDescriptionChange}
-                    curItem={curItem}
-                    purpose="jobDescription"
-                  />
-                </div> */}
                 <div className="mt-[25px]">
                   <p className="text-[15px] mb-[5px] font-semibold text-[#201e27]">
                     Description
                   </p>
                   <RichEditor
-                    htmlContent={curItem.description}
+                    htmlContent={description}
                     handleEditorChange={handleDescriptionChange}
                     curItem={curItem}
                     purpose="jobDescription"

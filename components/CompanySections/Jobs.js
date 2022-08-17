@@ -14,11 +14,13 @@ function Jobs({ id, companyDetails }) {
   };
 
   useEffect(() => {
-    if (companyDetails)
+    if (companyDetails) {
       if (companyDetails.jobs && companyDetails.jobs.length > 0) {
         setJobs(companyDetails.jobs);
       }
-    setAboutCompany(companyDetails.about);
+
+      if (companyDetails.about) setAboutCompany(companyDetails.about);
+    }
   }, [companyDetails]);
 
   const handleJobClick = (job, index) => {
@@ -26,7 +28,6 @@ function Jobs({ id, companyDetails }) {
     setIsEdit(true);
     setIndex(index);
     setShowAddJobModal(true);
-    setIsEdit(true);
   };
 
   const handleSaveJobClick = () => {
@@ -56,6 +57,7 @@ function Jobs({ id, companyDetails }) {
           setJobs={setJobs}
           curItem={curItem}
           isEdit={isEdit}
+          setIsEdit={setIsEdit}
           index={index}
           companyDetails={companyDetails}
         />
