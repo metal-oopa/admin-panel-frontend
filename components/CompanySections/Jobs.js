@@ -56,6 +56,7 @@ function Jobs({ id, companyDetails }) {
           jobs={jobs}
           setJobs={setJobs}
           curItem={curItem}
+          setCurItem={setCurItem}
           isEdit={isEdit}
           setIsEdit={setIsEdit}
           index={index}

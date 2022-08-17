@@ -11,6 +11,7 @@ function AddJobModal({
   jobs,
   setJobs,
   curItem,
+  setCurItem,
   isEdit,
   setIsEdit,
   index,
@@ -35,7 +36,7 @@ function AddJobModal({
   // load company details
   useEffect(() => {
     if (curItem) {
-      setJobTitle(curItem.jobTitle);
+      setJobTitle(curItem.title);
       setFeatured(curItem.featured);
       setDescription(curItem.description);
 
@@ -82,8 +83,36 @@ function AddJobModal({
   };
 
   const handleSaveJobClick = async () => {
-    if (curItem._id && isEdit) {
-      // update job
+
+    // if curItem is null, then add new job
+    if (!curItem || !isEdit) {
+
+      const newJob = {
+        title: jobTitle,
+        jobType: jobType,
+        description: description,
+        featured: featured
+      };
+
+      companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
+      companyDetails.jobs.push(newJob);
+
+      console.log(companyDetails.jobs);
+      // add axios call to update company details
+      const updatedCompanyDetails = await axios({
+        method: "put",
+        data: companyDetails,
+        // withCredentials: true,
+        url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
+      });
+
+      setJobs(updatedCompanyDetails.data.jobs);
+      setShowAddJobModal(0);
+      setCurItem(null);
+      setIsEdit(false);
+
+    } else {
+
       companyDetails.jobs.map((job, index) => {
         if (job._id === curItem._id) {
           job.title = jobTitle;
@@ -103,33 +132,15 @@ function AddJobModal({
       });
 
       // update jobs
-      setJobs(updatedCompanyDetails.data.jobs);
-      setShowAddJobModal(0);
-      setIsEdit(false);
-      return 0;
+      if (updatedCompanyDetails.status === 200) {
+        setJobs(updatedCompanyDetails.data.jobs);
+        setShowAddJobModal(0);
+        setIsEdit(false);
+      }
+      setCurItem(null);
+
     }
-    // add job
-    const newJob = {
-      title: jobTitle,
-      jobType: jobType,
-      description: description,
-      featured: featured
-    };
 
-    companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
-    companyDetails.jobs.push(newJob);
-
-    // add axios call to update company details
-    const updatedCompanyDetails = await axios({
-      method: "put",
-      data: companyDetails,
-      // withCredentials: true,
-      url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
-    });
-
-    setJobs(updatedCompanyDetails.data.jobs);
-    setShowAddJobModal(0);
-    setIsEdit(false);
   };
   const handleClose = (e) => {
     if (e.target.id === "container") {
@@ -318,3 +329,53 @@ function AddJobModal({
 }
 
 export default AddJobModal;
+
+
+// if (curItem._id && isEdit) {
+//       // update job
+//       companyDetails.jobs.map((job, index) => {
+//         if (job._id === curItem._id) {
+//           job.title = jobTitle;
+//           job.jobType = jobType;
+//           job.description = description;
+//           job.featured = featured;
+//         }
+//         return job;
+//       });
+
+//       // add axios call to update company details
+//       const updatedCompanyDetails = await axios({
+//         method: "PUT",
+//         data: companyDetails,
+//         // withCredentials: true,
+//         url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
+//       });
+
+//       // update jobs
+//       setJobs(updatedCompanyDetails.data.jobs);
+//       setShowAddJobModal(0);
+//       setIsEdit(false);
+//       return 0;
+//     }
+//     // add job
+//     const newJob = {
+//       title: jobTitle,
+//       jobType: jobType,
+//       description: description,
+//       featured: featured
+//     };
+
+//     companyDetails.jobs = companyDetails.jobs === undefined ? [] : companyDetails.jobs;
+//     companyDetails.jobs.push(newJob);
+
+//     // add axios call to update company details
+//     const updatedCompanyDetails = await axios({
+//       method: "put",
+//       data: companyDetails,
+//       // withCredentials: true,
+//       url: `https://hirable-backend-original.vercel.app/update-company/?_id=${companyDetails._id}`,
+//     });
+
+//     setJobs(updatedCompanyDetails.data.jobs);
+//     setShowAddJobModal(0);
+//     setIsEdit(false);
