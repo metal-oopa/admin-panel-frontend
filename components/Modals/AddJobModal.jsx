@@ -137,6 +137,7 @@ function AddJobModal({
     }
   };
 
+  // * Working correctly
   const handleDeleteJobClick = async () => {
     companyDetails.jobs.splice(index, 1);
 
