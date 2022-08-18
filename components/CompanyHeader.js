@@ -3,6 +3,16 @@ import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import toast, { Toaster } from "react-hot-toast";
 import Router from "next/router";
+import ImageKit from "imagekit-javascript";
+
+const PUBLIC_KEY = process.env.IMAGEKIT_PUBLIC_KEY;
+const ENDPOINT_URL = process.env.IMAGEKIT_URL_ENDPOINT;
+
+var imagekit = new ImageKit({
+  publicKey: "public_rZK0JjRuufHpzkAkdeEdqMw2uzw=",
+  urlEndpoint: "https://ik.imagekit.io/metadev/",
+  authenticationEndpoint: "http://localhost:3001/imagekit",
+});
 
 function CompanyHeader({ id, companyDetails }) {
   const message = () => {
@@ -37,21 +47,7 @@ function CompanyHeader({ id, companyDetails }) {
   const [companyLogo, setCompanyLogo] = useState("");
   const [companyTagline, setCompanyTagline] = useState("");
   const [featured, setFeatured] = useState(false);
-
-  // useEffect(async () => {
-  //   if (id) {
-  //     await axios({
-  //       method: "get",
-  //       // withCredentials: true,
-  //       url: `https://hirable-backend-original.vercel.app/get-companies/?_id=${id}`,
-  //     }).then((data) => {
-  //       setCompanyDetails(data.data);
-  //       setCompanyName(data.data.title);
-  //       setLinkedin(data.data.linkedin);
-  //       setCompanyLogo(data.data.image);
-  //     });
-  //   }
-  // }, []);
+  const [imageUrl, setImageUrl] = useState("");
 
   useEffect(() => {
     if (companyDetails) {
@@ -65,36 +61,43 @@ function CompanyHeader({ id, companyDetails }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // const company = {
-    //   companyName,
-    //   linkedin,
-    //   companyLogo,
-    // };
 
-    await axios({
-      method: "put",
-      data: {
-        title: companyName,
-        linkedin: linkedin,
-        image: companyLogo,
-        tagline: companyTagline,
-        featured: featured,
-        subtitle: companyDetails.subtitle,
-        description: companyDetails.description,
-        link: companyDetails.link,
-        jobs: companyDetails.jobs,
-        locations: companyDetails.locations,
-        tags: companyDetails.tags,
-        keyPeople: companyDetails.keyPeople,
-        teamSize: companyDetails.teamSize,
-        facebook: companyDetails.facebook,
-        instagram: companyDetails.instagram,
-        numberOfOpenings: companyDetails.numberOfOpenings,
-        image: companyDetails.image,
+    imagekit.upload(
+      {
+        file: companyLogo,
+        fileName: companyName + "_logo.png",
       },
-      // withCredentials: true,
-      url: `https://hirable-backend-original.vercel.app/update-company/?_id=${id}`,
-    });
+      async function (error, result) {
+        if (error) console.log(error);
+
+        const newData = {
+          image: result.url,
+          title: companyName,
+          linkedin: linkedin,
+          tagline: companyTagline,
+          featured: featured,
+          subtitle: companyDetails.subtitle,
+          description: companyDetails.description,
+          link: companyDetails.link,
+          jobs: companyDetails.jobs,
+          locations: companyDetails.locations,
+          tags: companyDetails.tags,
+          keyPeople: companyDetails.keyPeople,
+          teamSize: companyDetails.teamSize,
+          facebook: companyDetails.facebook,
+          instagram: companyDetails.instagram,
+          numberOfOpenings: companyDetails.numberOfOpenings,
+        };
+        console.log(newData);
+
+        const response = await axios({
+          method: "PUT",
+          data: newData,
+          // withCredentials: true,
+          url: `http://localhost:3001/update-company/?_id=${id}`,
+        });
+      }
+    );
 
     // setCompanyList((companyList) => [...companyList, company]);
     // setCompanyName("");
@@ -125,6 +128,7 @@ function CompanyHeader({ id, companyDetails }) {
       setCompanyLogo(readerEvent.target.result);
     };
   };
+
   return (
     <div className="w-full bg-white flex flex-col justify-center px-20 pt-10">
       <form className="p-6" onSubmit={handleSubmit}>
@@ -208,7 +212,10 @@ function CompanyHeader({ id, companyDetails }) {
             </button>
           </div>
           <button
-            onClick={() => notify()}
+            onClick={(e) => {
+              handleSubmit(e);
+              notify();
+            }}
             className="save-button"
             type="submit"
           >
