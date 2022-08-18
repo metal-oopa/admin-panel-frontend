@@ -35,7 +35,7 @@ function Company() {
       await axios({
         method: "get",
         // withCredentials: true,
-        url: `http://localhost:3001/get-jobs/?companyId=${id}`,
+        url: `https://hirable-backend-original.vercel.app/get-jobs/?companyId=${id}`,
         data: {
           companyId: id,
         },

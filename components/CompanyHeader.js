@@ -11,7 +11,8 @@ const ENDPOINT_URL = process.env.IMAGEKIT_URL_ENDPOINT;
 var imagekit = new ImageKit({
   publicKey: "public_rZK0JjRuufHpzkAkdeEdqMw2uzw=",
   urlEndpoint: "https://ik.imagekit.io/metadev/",
-  authenticationEndpoint: "http://localhost:3001/imagekit",
+  authenticationEndpoint:
+    "https://hirable-backend-original.vercel.app/imagekit",
 });
 
 function CompanyHeader({ id, companyDetails }) {
@@ -94,7 +95,7 @@ function CompanyHeader({ id, companyDetails }) {
           method: "PUT",
           data: newData,
           // withCredentials: true,
-          url: `http://localhost:3001/update-company/?_id=${id}`,
+          url: `https://hirable-backend-original.vercel.app/update-company/?_id=${id}`,
         });
       }
     );

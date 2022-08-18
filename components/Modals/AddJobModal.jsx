@@ -105,7 +105,7 @@ function AddJobModal({
         method: "POST",
         data: newJob,
         // withCredentials: true,
-        url: `http://localhost:3001/create-job`,
+        url: `https://hirable-backend-original.vercel.app/create-job`,
       });
 
       setShowAddJobModal(0);
@@ -144,7 +144,7 @@ function AddJobModal({
         method: "PUT",
         data: updatedJob,
         // withCredentials: true,
-        url: `http://localhost:3001/update-job`,
+        url: `https://hirable-backend-original.vercel.app/update-job`,
       });
     }
 
@@ -168,7 +168,7 @@ function AddJobModal({
         _id: curItem._id,
       },
       // withCredentials: true,
-      url: `http://localhost:3001/delete-job`,
+      url: `https://hirable-backend-original.vercel.app/delete-job`,
     });
   }
 
