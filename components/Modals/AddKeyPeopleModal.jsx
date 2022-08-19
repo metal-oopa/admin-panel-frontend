@@ -42,10 +42,6 @@ function AddKeyPeopleModal({
             notify("Role is required");
             return;
         }
-        if (email === "") {
-            notify("Email is required");
-            return;
-        }
         if (isEdit) {
             const data = {
                 name,
