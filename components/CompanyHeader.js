@@ -63,42 +63,73 @@ function CompanyHeader({ id, companyDetails }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    imagekit.upload(
-      {
-        file: companyLogo,
-        fileName: companyName + "_logo.png",
-      },
-      async function (error, result) {
-        if (error) console.log(error);
+    // send upload request to imagekit api if companyLogo starts with "data:image"
+    if (companyLogo?.startsWith("data:image")) {
+      imagekit.upload(
+        {
+          file: companyLogo,
+          fileName: companyName + "_logo.png",
+        },
+        async function (error, result) {
+          if (error) console.log(error);
 
-        const newData = {
-          image: result.url,
-          title: companyName,
-          linkedin: linkedin,
-          tagline: companyTagline,
-          featured: featured,
-          subtitle: companyDetails.subtitle,
-          description: companyDetails.description,
-          link: companyDetails.link,
-          jobs: companyDetails.jobs,
-          locations: companyDetails.locations,
-          tags: companyDetails.tags,
-          keyPeople: companyDetails.keyPeople,
-          teamSize: companyDetails.teamSize,
-          facebook: companyDetails.facebook,
-          instagram: companyDetails.instagram,
-          numberOfOpenings: companyDetails.numberOfOpenings,
-        };
-        console.log(newData);
+          const newData = {
+            image: result.url,
+            title: companyName,
+            linkedin: linkedin,
+            tagline: companyTagline,
+            featured: featured,
+            subtitle: companyDetails.subtitle,
+            description: companyDetails.description,
+            link: companyDetails.link,
+            jobs: companyDetails.jobs,
+            locations: companyDetails.locations,
+            tags: companyDetails.tags,
+            keyPeople: companyDetails.keyPeople,
+            teamSize: companyDetails.teamSize,
+            facebook: companyDetails.facebook,
+            instagram: companyDetails.instagram,
+            numberOfOpenings: companyDetails.numberOfOpenings,
+          };
+          console.log(newData);
 
-        const response = await axios({
-          method: "PUT",
-          data: newData,
-          // withCredentials: true,
-          url: `https://hirable-backend-original.vercel.app/update-company/?_id=${id}`,
-        });
-      }
-    );
+          const response = await axios({
+            method: "PUT",
+            data: newData,
+            // withCredentials: true,
+            url: `http://localhost:3001/update-company/?_id=${id}`,
+          });
+        }
+      );
+      return;
+    }
+
+    const newData = {
+      title: companyName,
+      image: companyLogo,
+      linkedin: linkedin,
+      tagline: companyTagline,
+      featured: featured,
+      subtitle: companyDetails.subtitle,
+      description: companyDetails.description,
+      link: companyDetails.link,
+      jobs: companyDetails.jobs,
+      locations: companyDetails.locations,
+      tags: companyDetails.tags,
+      keyPeople: companyDetails.keyPeople,
+      teamSize: companyDetails.teamSize,
+      facebook: companyDetails.facebook,
+      instagram: companyDetails.instagram,
+      numberOfOpenings: companyDetails.numberOfOpenings,
+    };
+    console.log(newData);
+
+    const response = await axios({
+      method: "PUT",
+      data: newData,
+      // withCredentials: true,
+      url: `https://hirable-backend-original.vercel.app/update-company/?_id=${id}`,
+    });
 
     // setCompanyList((companyList) => [...companyList, company]);
     // setCompanyName("");

@@ -108,9 +108,8 @@ function AddJobModal({
         url: `https://hirable-backend-original.vercel.app/create-job`,
       });
 
+      setFeatured(false);
       setShowAddJobModal(0);
-      setCurItem(null);
-      setIsEdit(false);
 
     } else {
 
@@ -135,8 +134,6 @@ function AddJobModal({
         return job;
       });
       setJobs(jobs);
-      setIsEdit(false);
-      setCurItem(null);
       setShowAddJobModal(0);
 
       // add axios call to update company details
